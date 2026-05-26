@@ -40,6 +40,8 @@ func add_resource(id: String, amount: float) -> void:
 
 ## Consumes amount of resource if available. Returns success.
 func consume_resource(id: String, amount: float) -> bool:
+	if amount <= 0:
+		return false
 	if has_enough_resources(id, amount):
 		resources[id] -= amount
 		EventBus.resource_updated.emit(id, resources[id])
@@ -59,7 +61,8 @@ func get_building_data() -> Array:
 	var file = FileAccess.open("res://data/buildings.json", FileAccess.READ)
 	if file:
 		var json = JSON.parse_string(file.get_as_text())
-		return json if json else []
+		if json and json is Array:
+			return json
 	return []
 
 ## Recalculates total worker capacity and assignments

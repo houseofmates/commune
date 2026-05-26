@@ -16,9 +16,19 @@ func _on_music_slider_changed(value: float) -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(value))
 
 func _on_erase_save_pressed() -> void:
-	# Confirmation logic would go here
-	DirAccess.remove_absolute("user://commune_save.json")
-	get_tree().quit()
+	$EraseConfirmation.popup_centered()
+
+func _on_erase_save_confirmed() -> void:
+	if FileAccess.file_exists("user://commune_save.json"):
+		var error = DirAccess.remove_absolute("user://commune_save.json")
+		if error == OK:
+			get_tree().quit()
+		else:
+			push_error("Failed to delete save file: error code " + str(error))
+			print("Error: Could not delete save file. The application will remain open.")
+	else:
+		print("Save file does not exist, nothing to delete.")
+		get_tree().quit()
 
 func _on_close_pressed() -> void:
 	queue_free()

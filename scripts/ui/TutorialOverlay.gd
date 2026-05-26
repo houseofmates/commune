@@ -16,7 +16,18 @@ func _ready() -> void:
 	_update_step()
 
 func _input(event: InputEvent) -> void:
+	var should_advance = false
+
 	if event is InputEventScreenTouch and event.pressed:
+		should_advance = true
+	elif event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			should_advance = true
+	elif event is InputEventKey and event.pressed:
+		if event.keycode == KEY_ENTER or event.keycode == KEY_SPACE or Input.is_action_pressed("ui_accept"):
+			should_advance = true
+
+	if should_advance:
 		current_step += 1
 		if current_step >= steps.size():
 			queue_free()
