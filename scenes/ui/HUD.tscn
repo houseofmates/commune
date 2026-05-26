@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ResourceBar.tscn" id="2_bar"]
+[ext_resource type="PackedScene" path="res://scenes/ui/BuildingMenu.tscn" id="3_menu"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="ResourceBar" parent="." instance=ExtResource("2_bar")]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="BuildButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -60.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "BUILD"
+
+[node name="BuildingMenu" parent="." instance=ExtResource("3_menu")]
+layout_mode = 1
+
+[connection signal="pressed" from="BuildButton" to="." method="_on_build_button_pressed"]

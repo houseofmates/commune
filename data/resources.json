@@ -1,0 +1,27 @@
+{
+  "food": {
+    "display_name": "Food",
+    "icon": "res://assets/sprites/resources/food.png",
+    "color": "#00FF00"
+  },
+  "energy": {
+    "display_name": "Energy",
+    "icon": "res://assets/sprites/resources/energy.png",
+    "color": "#FFFF00"
+  },
+  "materials": {
+    "display_name": "Materials",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#A52A2A"
+  },
+  "knowledge": {
+    "display_name": "Knowledge",
+    "icon": "res://assets/sprites/resources/knowledge.png",
+    "color": "#0000FF"
+  },
+  "labor_points": {
+    "display_name": "Labor Points",
+    "icon": "res://assets/sprites/resources/labor_points.png",
+    "color": "#FFD700"
+  }
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "house",
+    "display_name": "Worker Housing",
+    "description": "A place for the community to rest.",
+    "cost": { "labor_points": 20 },
+    "produces": { "labor_points": 0.5 },
+    "consumes": {},
+    "upgrade_cost_multiplier": 1.5,
+    "max_level": 10,
+    "unlock_at_labor_points": 0
+  },
+  {
+    "id": "farm",
+    "display_name": "Community Farm",
+    "description": "Collective farming for the people.",
+    "cost": { "labor_points": 50, "materials": 10 },
+    "produces": { "food": 2.0 },
+    "consumes": { "energy": 0.5 },
+    "upgrade_cost_multiplier": 1.8,
+    "max_level": 10,
+    "unlock_at_labor_points": 0
+  },
+  {
+    "id": "workshop",
+    "display_name": "Communal Workshop",
+    "description": "Forging the tools of the future.",
+    "cost": { "labor_points": 100, "food": 20 },
+    "produces": { "materials": 1.5 },
+    "consumes": { "energy": 1.0 },
+    "upgrade_cost_multiplier": 1.7,
+    "max_level": 10,
+    "unlock_at_labor_points": 100
+  },
+  {
+    "id": "power_plant",
+    "display_name": "Solar Array",
+    "description": "Clean energy for everyone.",
+    "cost": { "labor_points": 150, "materials": 30 },
+    "produces": { "energy": 5.0 },
+    "consumes": { "materials": 0.2 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_points": 200
+  },
+  {
+    "id": "library",
+    "display_name": "Public Library",
+    "description": "Knowledge is a public good.",
+    "cost": { "labor_points": 300, "materials": 50 },
+    "produces": { "knowledge": 1.0 },
+    "consumes": { "energy": 1.0 },
+    "upgrade_cost_multiplier": 1.6,
+    "max_level": 10,
+    "unlock_at_labor_points": 500
+  },
+  {
+    "id": "meeting_hall",
+    "display_name": "Meeting Hall",
+    "description": "Direct democracy in action.",
+    "cost": { "labor_points": 500, "materials": 100 },
+    "produces": { "labor_points": 2.0 },
+    "consumes": { "food": 1.0 },
+    "upgrade_cost_multiplier": 1.9,
+    "max_level": 5,
+    "unlock_at_labor_points": 1000
+  },
+  {
+    "id": "clinic",
+    "display_name": "Health Clinic",
+    "description": "Healthcare for the many.",
+    "cost": { "labor_points": 800, "materials": 150, "knowledge": 50 },
+    "produces": { "labor_points": 1.5 },
+    "consumes": { "energy": 2.0, "food": 1.0 },
+    "upgrade_cost_multiplier": 1.8,
+    "max_level": 10,
+    "unlock_at_labor_points": 2000
+  },
+  {
+    "id": "school",
+    "display_name": "Community School",
+    "description": "Educating the next generation.",
+    "cost": { "labor_points": 1200, "materials": 200, "knowledge": 100 },
+    "produces": { "knowledge": 3.0 },
+    "consumes": { "food": 2.0, "energy": 1.5 },
+    "upgrade_cost_multiplier": 1.7,
+    "max_level": 10,
+    "unlock_at_labor_points": 5000
+  },
+  {
+    "id": "recreation_center",
+    "display_name": "People's Park",
+    "description": "Rest and recreation for all.",
+    "cost": { "labor_points": 2000, "materials": 300 },
+    "produces": { "labor_points": 5.0 },
+    "consumes": { "food": 1.0, "energy": 1.0 },
+    "upgrade_cost_multiplier": 1.6,
+    "max_level": 10,
+    "unlock_at_labor_points": 10000
+  },
+  {
+    "id": "water_tower",
+    "display_name": "Water Tower",
+    "description": "Essential infrastructure.",
+    "cost": { "labor_points": 400, "materials": 80 },
+    "produces": { "food": 1.0 },
+    "consumes": { "energy": 1.0 },
+    "upgrade_cost_multiplier": 1.5,
+    "max_level": 10,
+    "unlock_at_labor_points": 300
+  }
+]

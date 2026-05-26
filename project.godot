@@ -1,0 +1,22 @@
+config_version=5
+
+[application]
+config/name="The Commune"
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+EventBus="*res://scripts/autoloads/EventBus.gd"
+GameState="*res://scripts/autoloads/GameState.gd"
+SaveManager="*res://scripts/autoloads/SaveManager.gd"
+ResourceManager="*res://scripts/autoloads/ResourceManager.gd"
+
+[display]
+window/size/viewport_width=390
+window/size/viewport_height=844
+window/stretch/mode="canvas_items"
+window/handheld/orientation=1
+
+[rendering]
+2d/snap/snap_2d_transforms_to_pixel=true
