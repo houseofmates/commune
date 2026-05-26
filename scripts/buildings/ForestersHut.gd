@@ -1,4 +1,4 @@
 extends "res://scripts/buildings/BaseBuilding.gd"
 func _ready():
-	id = "library"
+	id = "foresters_hut"
 	super._ready()

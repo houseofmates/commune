@@ -6,40 +6,33 @@ const COLOR_ACCENT_YELLOW = Color("#f6b012")
 const COLOR_ACCENT_BLUE = Color("#3c9fdd")
 const COLOR_TEXT_PRIMARY = Color("#ffffff")
 
-var resources: Dictionary = {
-	"food": 0.0,
-	"energy": 0.0,
-	"materials": 0.0,
-	"knowledge": 0.0,
-	"labor_points": 0.0
-}
-
-var max_storage: Dictionary = {
-	"food": 100.0,
-	"energy": 100.0,
-	"materials": 100.0,
-	"knowledge": 100.0,
-	"labor_points": 1000.0
-}
-
-var production_rates: Dictionary = {
-	"food": 0.0,
-	"energy": 0.0,
-	"materials": 0.0,
-	"knowledge": 0.0,
-	"labor_points": 1.0
-}
+var resources: Dictionary = {}
+var max_storage: Dictionary = {}
+var production_rates: Dictionary = {}
 
 var buildings: Array = []
+var total_workers: int = 0
+var assigned_workers: int = 0
 var last_save_time: int = 0
 
 func _ready() -> void:
 	last_save_time = Time.get_unix_time_from_system()
+	_init_resources()
+
+func _init_resources() -> void:
+	var file = FileAccess.open("res://data/resources.json", FileAccess.READ)
+	if file:
+		var data = JSON.parse_string(file.get_as_text())
+		for id in data.keys():
+			resources[id] = 0.0
+			max_storage[id] = 1000.0 if id == "labor_vouchers" else 500.0
+			production_rates[id] = 1.0 if id == "labor_vouchers" else 0.0
 
 func add_resource(id: String, amount: float) -> void:
-	if resources.has(id):
-		resources[id] = min(resources[id] + amount, max_storage.get(id, INF))
-		EventBus.resource_updated.emit(id, resources[id])
+	if not resources.has(id):
+		resources[id] = 0.0
+	resources[id] = min(resources[id] + amount, max_storage.get(id, INF))
+	EventBus.resource_updated.emit(id, resources[id])
 
 func consume_resource(id: String, amount: float) -> bool:
 	if resources.has(id) and resources[id] >= amount:
@@ -54,3 +47,12 @@ func get_building_data() -> Array:
 		var json = JSON.parse_string(file.get_as_text())
 		return json if json else []
 	return []
+
+func update_worker_stats() -> void:
+	total_workers = 0
+	assigned_workers = 0
+	for b in buildings:
+		if is_instance_valid(b):
+			if b.id == "house":
+				total_workers += b.worker_capacity
+			assigned_workers += b.assigned_workers

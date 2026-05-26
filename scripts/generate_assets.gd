@@ -18,7 +18,7 @@ func _init():
 		"res://assets/sprites/resources/energy.png",
 		"res://assets/sprites/resources/materials.png",
 		"res://assets/sprites/resources/knowledge.png",
-		"res://assets/sprites/resources/labor_points.png",
+		"res://assets/sprites/resources/labor_vouchers.png",
 		"res://assets/sprites/ui/button.png",
 		"res://assets/sprites/ui/panel.png"
 	]

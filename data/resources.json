@@ -1,27 +1,72 @@
 {
-  "food": {
-    "display_name": "food",
+  "labor_vouchers": {
+    "display_name": "labor vouchers",
+    "icon": "res://assets/sprites/resources/labor_vouchers.png",
+    "color": "#f6b012"
+  },
+  "wheat": {
+    "display_name": "wheat",
     "icon": "res://assets/sprites/resources/food.png",
-    "color": "#00FF00"
+    "color": "#e2bd62"
   },
-  "energy": {
-    "display_name": "energy",
-    "icon": "res://assets/sprites/resources/energy.png",
-    "color": "#FFFF00"
-  },
-  "materials": {
-    "display_name": "materials",
+  "logs": {
+    "display_name": "logs",
     "icon": "res://assets/sprites/resources/materials.png",
-    "color": "#A52A2A"
+    "color": "#6d4c41"
   },
-  "knowledge": {
-    "display_name": "knowledge",
+  "stone": {
+    "display_name": "stone",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#9e9e9e"
+  },
+  "iron_ore": {
+    "display_name": "iron ore",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#4e342e"
+  },
+  "wool": {
+    "display_name": "wool",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#f5f5f5"
+  },
+  "flour": {
+    "display_name": "flour",
+    "icon": "res://assets/sprites/resources/food.png",
+    "color": "#ffffff"
+  },
+  "planks": {
+    "display_name": "planks",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#a1887f"
+  },
+  "stone_blocks": {
+    "display_name": "stone blocks",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#bdbdbd"
+  },
+  "iron_ingots": {
+    "display_name": "iron ingots",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#cfd8dc"
+  },
+  "bread": {
+    "display_name": "bread",
+    "icon": "res://assets/sprites/resources/food.png",
+    "color": "#8d6e63"
+  },
+  "furniture": {
+    "display_name": "furniture",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#795548"
+  },
+  "tools": {
+    "display_name": "tools",
     "icon": "res://assets/sprites/resources/knowledge.png",
-    "color": "#0000FF"
+    "color": "#455a64"
   },
-  "labor_points": {
-    "display_name": "labor points",
-    "icon": "res://assets/sprites/resources/labor_points.png",
-    "color": "#FFD700"
+  "clothing": {
+    "display_name": "clothing",
+    "icon": "res://assets/sprites/resources/materials.png",
+    "color": "#3f51b5"
   }
 }

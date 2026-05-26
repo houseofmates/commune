@@ -1,0 +1,81 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/character/WorkerNPC.gd" id="1_script"]
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -2)]
+}
+
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Visuals:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -5), Vector2(0, 0), Vector2(0, -5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1"]
+_data = {
+"idle": SubResource("Animation_idle"),
+"walk": SubResource("Animation_walk")
+}
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
+radius = 8.0
+height = 16.0
+
+[node name="WorkerNPC" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="Shadow" type="ColorRect" parent="."]
+offset_left = -10.0
+offset_top = 12.0
+offset_right = 10.0
+offset_bottom = 16.0
+color = Color(0, 0, 0, 0.3)
+
+[node name="Visuals" type="Node2D" parent="."]
+
+[node name="Pants" type="Polygon2D" parent="Visuals"]
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-8, 8, 8, 8, 12, 24, -12, 24)
+
+[node name="Shirt" type="Polygon2D" parent="Visuals"]
+color = Color(0.5, 0.5, 0.5, 1)
+polygon = PackedVector2Array(-10, -16, 10, -16, 8, 8, -8, 8)
+
+[node name="Head" type="ColorRect" parent="Visuals"]
+offset_left = -6.0
+offset_top = -28.0
+offset_right = 6.0
+offset_bottom = -16.0
+color = Color(0.9, 0.7, 0.5, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_1")
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 16)
+shape = SubResource("CapsuleShape2D_1")

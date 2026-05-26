@@ -16,26 +16,34 @@ func _on_tick() -> void:
 	# 2. Apply production
 	for res_id in GameState.resources.keys():
 		var rate = GameState.production_rates.get(res_id, 0.0)
-		GameState.add_resource(res_id, rate)
+		if rate > 0:
+			GameState.add_resource(res_id, rate)
+		elif rate < 0:
+			# Only consume if we have enough
+			if GameState.resources[res_id] >= abs(rate):
+				GameState.consume_resource(res_id, abs(rate))
+			else:
+				# If we can't consume, maybe disable the building or reduce production?
+				# For now, we'll just allow it to go to 0
+				GameState.consume_resource(res_id, GameState.resources[res_id])
 
 	# 3. Handle auto-save
 	if int(Time.get_unix_time_from_system()) % 60 == 0:
 		SaveManager.save_game()
 
 func update_production_rates() -> void:
-	# Reset rates to base (labor points)
+	# Reset rates to base
 	for res_id in GameState.production_rates.keys():
-		GameState.production_rates[res_id] = 1.0 if res_id == "labor_points" else 0.0
+		GameState.production_rates[res_id] = 1.0 if res_id == "labor_vouchers" else 0.0
 
 	# Sum up from all active buildings
-	# This assumes GameState.buildings contains objects with production data
 	for b in GameState.buildings:
-		if b.has_method("get_production"):
+		if is_instance_valid(b):
+			var efficiency = b.get_efficiency()
 			var prod = b.get_production()
 			for res_id in prod.keys():
-				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) + prod[res_id]
+				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) + prod[res_id] * efficiency
 
-		if b.has_method("get_consumption"):
 			var cons = b.get_consumption()
 			for res_id in cons.keys():
-				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) - cons[res_id]
+				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) - cons[res_id] * efficiency

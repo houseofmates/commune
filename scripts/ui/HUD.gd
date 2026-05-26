@@ -2,10 +2,14 @@ extends Control
 
 @onready var building_menu: Control = $BuildingMenu
 @onready var build_button: Button = $BuildButton
+@onready var worker_count: Label = $WorkerCount
 
 func _ready() -> void:
 	build_button.button_down.connect(_on_button_down.bind(build_button))
 	build_button.button_up.connect(_on_button_up.bind(build_button))
+
+func _process(_delta: float) -> void:
+	worker_count.text = "workers: " + str(GameState.assigned_workers) + "/" + str(GameState.total_workers)
 
 func _on_button_down(btn: Button) -> void:
 	var tween = create_tween()

@@ -9,7 +9,7 @@ export-android:
 
 export-linux:
 	mkdir -p build/linux
-	godot --headless --path . --export-release "Linux/X11" build/linux/the-commune.AppImage
+	godot --headless --path . --export-release "Linux" build/linux/the-commune.AppImage
 
 import:
 	godot --headless --path . --editor --quit
