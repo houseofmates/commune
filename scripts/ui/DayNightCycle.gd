@@ -4,8 +4,6 @@ class_name DayNightCycle
 @export var cycle_duration: float = 300.0 # 5 minutes
 
 func _process(_delta: float) -> void:
-	if cycle_duration <= 0:
-		return
 	var time = fmod(Time.get_unix_time_from_system(), cycle_duration)
 	var progress = time / cycle_duration
 	var intensity = (sin(progress * TAU - PI/2) + 1.0) / 2.0

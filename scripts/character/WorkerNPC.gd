@@ -29,19 +29,18 @@ func _update_visuals() -> void:
 		State.GATHERING: status_icon.color = Color.GREEN
 		State.DELIVERING: status_icon.color = Color.BLUE
 
+func _get_needed_res() -> String:
+	if not assigned_building: return ""
+	if assigned_building.id == "farm": return "wheat"
+	elif assigned_building.id == "foresters_hut": return "logs"
+	elif assigned_building.id == "quarry": return "stone"
+	elif assigned_building.id == "mine": return "iron_ore"
+	elif assigned_building.id == "sheep_farm": return "wool"
+	return ""
+
 func _find_nearest_resource() -> void:
-	if not assigned_building: return
-
-	# Determine needed resource based on building type
-	var needed_res = ""
-	if assigned_building.id == "farm": needed_res = "wheat"
-	elif assigned_building.id == "foresters_hut": needed_res = "logs"
-	elif assigned_building.id == "quarry": needed_res = "stone"
-	elif assigned_building.id == "mine": needed_res = "iron_ore"
-	elif assigned_building.id == "sheep_farm": needed_res = "wool"
-
+	var needed_res = _get_needed_res()
 	if needed_res == "":
-		# Processing buildings just walk to the building itself or stay idle
 		current_target_node = assigned_building
 		return
 
@@ -50,7 +49,7 @@ func _find_nearest_resource() -> void:
 	var min_dist = INF
 
 	for t in targets:
-		if t is ResourceNode and t.resource_id == needed_res:
+		if t.has_method("get") and t.resource_id == needed_res:
 			var d = global_position.distance_to(t.global_position)
 			if d < min_dist:
 				min_dist = d
@@ -82,8 +81,7 @@ func _physics_process(delta: float) -> void:
 				current_target_node = assigned_building
 				_update_visuals()
 		elif current_state == State.DELIVERING:
-			# Delivered
-			EventBus.resource_gained_at.emit("", 1.0, global_position)
+			EventBus.resource_gained_at.emit(_get_needed_res(), 1.0, global_position)
 			current_state = State.GATHERING
 			_find_nearest_resource()
 			_update_visuals()

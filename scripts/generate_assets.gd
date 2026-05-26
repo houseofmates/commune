@@ -2,72 +2,60 @@
 extends SceneTree
 
 func _init():
-	var assets = {
-		"buildings/house.png": Color.GRAY,
-		"buildings/farm.png": Color.GREEN,
-		"buildings/workshop.png": Color.BROWN,
-		"buildings/power_plant.png": Color.YELLOW,
-		"buildings/library.png": Color.BLUE,
-		"buildings/foresters_hut": Color.DARK_GREEN,
-		"buildings/quarry.png": Color.DIM_GRAY,
-		"buildings/mine.png": Color.SADDLE_BROWN,
-		"buildings/sheep_farm.png": Color.WHITE,
-		"buildings/mill.png": Color.WHEAT,
-		"buildings/sawmill.png": Color.SIENNA,
-		"buildings/stonemason.png": Color.LIGHT_GRAY,
-		"buildings/smelter.png": Color.DARK_SLATE_GRAY,
-		"buildings/bakery.png": Color.PERU,
-		"buildings/blacksmith.png": Color.DARK_CYAN,
-		"buildings/tailor.png": Color.VIOLET,
-		"buildings/monument.png": Color.GOLD,
-		"resources/labor_vouchers.png": Color.GOLD,
-		"resources/wheat.png": Color.GOLDENROD,
-		"resources/logs.png": Color.SADDLE_BROWN,
-		"resources/stone.png": Color.GRAY,
-		"resources/iron_ore.png": Color.CHOCOLATE,
-		"resources/flour.png": Color.WHITE,
-		"resources/planks.png": Color.SANDY_BROWN,
-		"resources/stone_blocks.png": Color.SILVER,
-		"resources/iron_ingots.png": Color.LIGHT_STEEL_BLUE,
-		"resources/bread.png": Color.SADDLE_BROWN,
-		"resources/furniture.png": Color.BURLYWOOD,
-		"resources/tools.png": Color.DARK_GRAY,
-		"resources/wool.png": Color.SNOW,
-		"resources/clothing.png": Color.ROYAL_BLUE,
-		"ui/button.png": Color.LIGHT_GRAY,
-		"ui/panel.png": Color.DARK_GRAY
-	}
+	var buildings = ["house", "farm", "workshop", "library", "power_plant", "foresters_hut", "quarry", "mine", "sheep_farm", "mill", "sawmill", "stonemason", "smelter", "bakery", "blacksmith", "tailor", "monument"]
+	var resources = ["labor_vouchers", "wheat", "logs", "stone", "iron_ore", "flour", "planks", "stone_blocks", "iron_ingots", "bread", "furniture", "tools", "wool", "clothing"]
+
+	var base_path = "res://assets/sprites/"
 
 	# Delete existing sprites
-	var base_path = "res://assets/sprites/"
 	_delete_recursive(base_path)
 
-	for path in assets.keys():
-		var full_path = base_path + path
-		if not full_path.ends_with(".png"):
-			full_path += ".png"
-
-		var dir = full_path.get_base_dir()
+	# Create directories
+	for dir_name in ["buildings", "resources", "ui", "character"]:
+		var dir = base_path + dir_name
 		if not DirAccess.dir_exists_absolute(dir):
-			var err = DirAccess.make_dir_recursive_absolute(dir)
-			if err != OK:
-				push_error("Failed to create directory: " + dir)
-				continue
+			DirAccess.make_dir_recursive_absolute(dir)
 
-		var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
-		img.fill(assets[path])
+	# Generate buildings
+	for i in range(buildings.size()):
+		var b = buildings[i]
+		var color = Color.from_hsv(float(i) / buildings.size(), 0.7, 0.8)
+		_generate_image(base_path + "buildings/" + b + ".png", color, b.substr(0, 1).to_upper())
 
-		# Draw a simple shape or letter
-		var rect = Rect2i(8, 8, 16, 16)
-		img.fill_rect(rect, assets[path].darkened(0.5))
+	# Generate resources
+	for i in range(resources.size()):
+		var r = resources[i]
+		var color = Color.from_hsv(float(i) / resources.size(), 0.5, 0.9)
+		_generate_image(base_path + "resources/" + r + ".png", color, r.substr(0, 1).to_lower())
 
-		var err = img.save_png(full_path)
-		if err == OK:
-			pass
-		else:
-			push_error("Failed to save PNG: " + full_path)
+	# UI and Character
+	_generate_image(base_path + "ui/button.png", Color.DARK_GRAY, "B")
+	_generate_image(base_path + "ui/panel.png", Color.BLACK, "P")
+	_generate_image(base_path + "character/john.png", Color.SADDLE_BROWN, "J")
 
 	quit()
+
+func _generate_image(path: String, color: Color, label: String):
+	var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	img.fill(color)
+
+	# Draw a border and a cross pattern to ensure distinctiveness and size
+	for x in range(32):
+		img.set_pixel(x, 0, Color.BLACK)
+		img.set_pixel(x, 31, Color.BLACK)
+	for y in range(32):
+		img.set_pixel(0, y, Color.BLACK)
+		img.set_pixel(31, y, Color.BLACK)
+
+	for i in range(8, 24):
+		img.set_pixel(i, i, Color.WHITE)
+		img.set_pixel(31-i, i, Color.WHITE)
+
+	var err = img.save_png(path)
+	if err == OK:
+		print("Generated: ", path)
+	else:
+		push_error("Failed to save: " + path)
 
 func _delete_recursive(path: String):
 	var dir = DirAccess.open(path)
@@ -76,8 +64,9 @@ func _delete_recursive(path: String):
 		var file_name = dir.get_next()
 		while file_name != "":
 			if file_name != "." and file_name != "..":
+				var full_path = path + "/" + file_name
 				if dir.current_is_dir():
-					_delete_recursive(path + "/" + file_name)
+					_delete_recursive(full_path)
 				else:
 					dir.remove(file_name)
 			file_name = dir.get_next()

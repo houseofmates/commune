@@ -1,9 +1,10 @@
-class_name AudioManager
 extends Node
+class_name AudioManager
 
 var audio_player: AudioStreamPlayer
 var ambient_player: AudioStreamPlayer
 var sample_hz = 44100.0
+var ambient_phase = 0.0
 
 func _ready() -> void:
 	audio_player = AudioStreamPlayer.new()
@@ -17,7 +18,6 @@ func _ready() -> void:
 
 	EventBus.building_placed.connect(func(_b): play_beep(440, 0.15))
 	EventBus.building_upgraded.connect(func(_b): play_beep(880, 0.2))
-	EventBus.resource_updated.connect(func(_id, _amount): play_beep(220, 0.05))
 
 func _setup_ambient() -> void:
 	var stream = AudioStreamGenerator.new()
@@ -29,25 +29,23 @@ func _setup_ambient() -> void:
 func _process(_delta: float) -> void:
 	_fill_ambient_buffer()
 
-var phase_acc: float = 0.0
-
 func _fill_ambient_buffer() -> void:
 	if not ambient_player.playing: return
 	var playback = ambient_player.get_stream_playback()
+	if not playback: return
 	var to_fill = playback.get_frames_available()
 
-	var t = Time.get_ticks_msec() / 1000.0
-	var freq = 60.0 + sin(t * 0.5) * 2.0
-	var phase_inc = TAU * freq / sample_hz
-
 	while to_fill > 0:
-		var sample = sin(phase_acc) * 0.05 # Lower volume
+		var t = Time.get_ticks_msec() / 1000.0
+		var freq = 60.0 + sin(t * 0.5) * 2.0
+		var increment = freq / sample_hz
+		ambient_phase = fmod(ambient_phase + increment, 1.0)
+		var sample = sin(ambient_phase * TAU) * 0.05
 		playback.push_frame(Vector2(sample, sample))
-		phase_acc += phase_inc
 		to_fill -= 1
 
 func play_beep(frequency: float, duration: float) -> void:
-	# Avoid excessive spam for resource updates
+	# Avoid excessive spam
 	if frequency == 220 and randf() > 0.1: return
 
 	var stream = AudioStreamGenerator.new()
@@ -61,6 +59,10 @@ func play_beep(frequency: float, duration: float) -> void:
 	temp_player.play()
 
 	var playback = temp_player.get_stream_playback()
+	if not playback:
+		temp_player.queue_free()
+		return
+
 	var frames = int(sample_hz * duration)
 	for i in range(frames):
 		var t = float(i) / sample_hz
@@ -79,4 +81,5 @@ func _enter_tree():
 
 func _on_node_added(node):
 	if node is Button:
-		node.pressed.connect(play_click)
+		if not node.pressed.is_connected(play_click):
+			node.pressed.connect(play_click)

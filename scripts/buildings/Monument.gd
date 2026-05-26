@@ -11,13 +11,12 @@ func _ready() -> void:
 	if level > 1:
 		is_completed = true
 
-	if not is_completed:
-		progress_bar = ProgressBar.new()
-		progress_bar.max_value = completion_time
-		progress_bar.custom_minimum_size = Vector2(100, 10)
-		progress_bar.position = Vector2(-50, -80)
-		progress_bar.show_percentage = false
-		add_child(progress_bar)
+	progress_bar = ProgressBar.new()
+	progress_bar.max_value = completion_time
+	progress_bar.custom_minimum_size = Vector2(100, 10)
+	progress_bar.position = Vector2(-50, -80)
+	progress_bar.show_percentage = false
+	add_child(progress_bar)
 
 func _process(delta: float) -> void:
 	if not is_completed and level == 1:
@@ -33,13 +32,27 @@ func complete_monument() -> void:
 
 	EventBus.monument_completed.emit(global_position)
 
+	# Screen Flash
+	var flash = ColorRect.new()
+	flash.color = Color.WHITE
+	flash.anchors_preset = Control.PRESET_FULL_RECT
 	var canvas = CanvasLayer.new()
-	canvas.layer = 100
+	canvas.layer = 101
+	canvas.add_child(flash)
 	get_tree().root.add_child(canvas)
+
+	var tween = create_tween()
+	tween.tween_property(flash, "modulate:a", 0.0, 1.0)
+	tween.tween_callback(canvas.queue_free)
+
+	# Victory Panel
+	var victory_canvas = CanvasLayer.new()
+	victory_canvas.layer = 100
+	get_tree().root.add_child(victory_canvas)
 
 	var panel = Panel.new()
 	panel.anchors_preset = Control.PRESET_FULL_RECT
-	canvas.add_child(panel)
+	victory_canvas.add_child(panel)
 
 	var title = Label.new()
 	title.text = "monument to labour completed"
@@ -57,5 +70,5 @@ func complete_monument() -> void:
 	var btn = Button.new()
 	btn.text = "continue playing"
 	btn.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM, Control.PRESET_MODE_KEEP_SIZE, -50)
-	btn.pressed.connect(func(): canvas.queue_free())
+	btn.pressed.connect(func(): victory_canvas.queue_free())
 	panel.add_child(btn)

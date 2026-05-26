@@ -19,28 +19,15 @@ func _process(delta: float) -> void:
 
 func _on_tick() -> void:
 	update_production_rates()
-
-	# Calculate production scale based on available resources for consumption
-	var production_scale: float = 1.0
-	for res_id in GameState.resources.keys():
-		var rate = GameState.production_rates.get(res_id, 0.0)
-		if rate < 0:  # Consumption
-			var required = abs(rate)
-			var available = GameState.resources[res_id]
-			var available_fraction = 0.0 if required == 0 else clamp(available / required, 0.0, 1.0)
-			production_scale = min(production_scale, available_fraction)
-
-	# Skip production if no resources available
-	if production_scale == 0:
-		return
-
-	# Apply scaled rates
 	for res_id in GameState.resources.keys():
 		var rate = GameState.production_rates.get(res_id, 0.0)
 		if rate > 0:
-			GameState.add_resource(res_id, floor(rate * production_scale))
+			GameState.add_resource(res_id, rate)
 		elif rate < 0:
-			GameState.consume_resource(res_id, ceil(abs(rate) * production_scale))
+			if GameState.resources[res_id] >= abs(rate):
+				GameState.consume_resource(res_id, abs(rate))
+			else:
+				GameState.consume_resource(res_id, GameState.resources[res_id])
 
 func update_production_rates() -> void:
 	for res_id in GameState.production_rates.keys():

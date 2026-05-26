@@ -43,12 +43,10 @@ func upgrade() -> bool:
 
 	var cost = get_upgrade_cost()
 
-	# Phase 1: Validation
 	for res_id in cost.keys():
 		if not GameState.has_enough_resources(res_id, cost[res_id]):
 			return false
 
-	# Phase 2: Consumption
 	for res_id in cost.keys():
 		GameState.consume_resource(res_id, cost[res_id])
 
@@ -75,21 +73,24 @@ func get_upgrade_cost() -> Dictionary:
 	return current_cost
 
 func get_production() -> Dictionary:
+	# Efficiency is applied here: base * level * efficiency
+	var efficiency = get_efficiency()
 	var current_prod = {}
 	for res_id in production.keys():
-		current_prod[res_id] = production[res_id] * level
+		current_prod[res_id] = production[res_id] * level * efficiency
 	return current_prod
 
 func get_consumption() -> Dictionary:
+	# Efficiency is applied here: base * level * efficiency
+	var efficiency = get_efficiency()
 	var current_cons = {}
 	for res_id in consumption.keys():
-		current_cons[res_id] = consumption[res_id] * level
+		current_cons[res_id] = consumption[res_id] * level * efficiency
 	return current_cons
 
 func get_efficiency() -> float:
-	if id == "house" or id == "monument":
-		return 1.0
-	if max_workers == 0:
+	# Efficiency is 1.0 for non-worker buildings
+	if id == "house" or id == "monument" or max_workers == 0:
 		return 1.0
 	return float(assigned_workers) / float(max_workers)
 
