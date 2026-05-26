@@ -29,17 +29,21 @@ func _setup_ambient() -> void:
 func _process(_delta: float) -> void:
 	_fill_ambient_buffer()
 
+var phase_acc: float = 0.0
+
 func _fill_ambient_buffer() -> void:
 	if not ambient_player.playing: return
 	var playback = ambient_player.get_stream_playback()
 	var to_fill = playback.get_frames_available()
 
+	var t = Time.get_ticks_msec() / 1000.0
+	var freq = 60.0 + sin(t * 0.5) * 2.0
+	var phase_inc = TAU * freq / sample_hz
+
 	while to_fill > 0:
-		var t = Time.get_ticks_msec() / 1000.0
-		var freq = 60.0 + sin(t * 0.5) * 2.0
-		var phase = t * freq * TAU
-		var sample = sin(phase) * 0.05 # Lower volume
+		var sample = sin(phase_acc) * 0.05 # Lower volume
 		playback.push_frame(Vector2(sample, sample))
+		phase_acc += phase_inc
 		to_fill -= 1
 
 func play_beep(frequency: float, duration: float) -> void:

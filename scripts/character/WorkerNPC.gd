@@ -83,7 +83,7 @@ func _physics_process(delta: float) -> void:
 				_update_visuals()
 		elif current_state == State.DELIVERING:
 			# Delivered
-EventBus.resource_gained_at.emit("", 1.0, global_position)
+			EventBus.resource_gained_at.emit("", 1.0, global_position)
 			current_state = State.GATHERING
 			_find_nearest_resource()
 			_update_visuals()

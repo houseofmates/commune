@@ -53,7 +53,11 @@ func _input(event: InputEvent) -> void:
 		var tile_pos = world_map.local_to_map(world_map.to_local(mouse_pos))
 		preview_sprite.global_position = world_map.to_global(world_map.map_to_local(tile_pos))
 
-	if event is InputEventMouseButton or event is InputEventScreenTouch:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var mouse_pos = get_global_mouse_position()
+			place_building(mouse_pos)
+	elif event is InputEventScreenTouch:
 		if event.pressed:
 			var mouse_pos = get_global_mouse_position()
 			place_building(mouse_pos)
@@ -71,20 +75,25 @@ func place_building(world_pos: Vector2) -> void:
 			cancel_placement()
 			return
 
-	# Consume resources
-	for res_id in current_cost.keys():
-		GameState.consume_resource(res_id, current_cost[res_id])
-
 	var tile_pos = world_map.local_to_map(world_map.to_local(world_pos))
 	var scene_path = BUILDING_SCENES[current_building_id]
 
 	var building_scene = load(scene_path)
 	if building_scene:
 		var instance = building_scene.instantiate() as BaseBuilding
-		instance.id = current_building_id
-		instance.global_position = world_map.to_global(world_map.map_to_local(tile_pos))
-		get_parent().add_child(instance)
-		EventBus.building_placed.emit(instance)
+		if instance:
+			instance.id = current_building_id
+			instance.global_position = world_map.to_global(world_map.map_to_local(tile_pos))
+			get_parent().add_child(instance)
+			EventBus.building_placed.emit(instance)
+
+			# Consume resources only after successful placement
+			for res_id in current_cost.keys():
+				GameState.consume_resource(res_id, current_cost[res_id])
+		else:
+			push_error("Failed to instantiate building: " + current_building_id)
+	else:
+		push_error("Failed to load building scene: " + scene_path)
 
 	cancel_placement()
 

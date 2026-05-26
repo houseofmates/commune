@@ -11,12 +11,13 @@ func _ready() -> void:
 	if level > 1:
 		is_completed = true
 
-	progress_bar = ProgressBar.new()
-	progress_bar.max_value = completion_time
-	progress_bar.custom_minimum_size = Vector2(100, 10)
-	progress_bar.position = Vector2(-50, -80)
-	progress_bar.show_percentage = false
-	add_child(progress_bar)
+	if not is_completed:
+		progress_bar = ProgressBar.new()
+		progress_bar.max_value = completion_time
+		progress_bar.custom_minimum_size = Vector2(100, 10)
+		progress_bar.position = Vector2(-50, -80)
+		progress_bar.show_percentage = false
+		add_child(progress_bar)
 
 func _process(delta: float) -> void:
 	if not is_completed and level == 1:
