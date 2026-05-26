@@ -26,12 +26,16 @@ func _process(_delta: float) -> void:
 
 	if closest_b:
 		current_building = closest_b
-		manage_icon.visible = true
-		manage_icon.global_position = get_viewport().get_camera_2d().unproject_position(current_building.global_position + Vector2(0, -60))
+		var camera = get_viewport().get_camera_2d()
+		if camera != null:
+			manage_icon.visible = true
+			manage_icon.global_position = camera.unproject_position(current_building.global_position + Vector2(0, -60))
+		else:
+			manage_icon.visible = false
 	else:
 		current_building = null
 		manage_icon.visible = false
 
 func _on_manage_pressed() -> void:
-	if current_building:
+	if is_instance_valid(current_building) and current_building.has_method("interact"):
 		current_building.interact()

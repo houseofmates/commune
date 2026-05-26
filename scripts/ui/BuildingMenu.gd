@@ -15,8 +15,8 @@ func populate_menu() -> void:
 		var btn = Button.new()
 		btn.text = b["display_name"].to_lower() + "\n(" + str(b["cost"].get("labor_vouchers", 0)) + " lv)"
 		btn.custom_minimum_size = Vector2(100, 100)
-		btn.theme_override_fonts/font = load("res://assets/fonts/VarelaRound-Regular.ttf")
-		btn.theme_override_font_sizes/font_size = 12
+		btn.add_theme_font_override("font", load("res://assets/fonts/VarelaRound-Regular.ttf"))
+		btn.add_theme_constant_override("font_size", 12)
 		btn.pressed.connect(_on_building_selected.bind(b))
 		btn.button_down.connect(_on_button_down.bind(btn))
 		btn.button_up.connect(_on_button_up.bind(btn))
