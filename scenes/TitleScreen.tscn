@@ -18,170 +18,50 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0196078, 0.0196078, 0.0196078, 1)
+color = Color(0.02, 0.02, 0.02, 1)
 
-[node name="Title" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -150.0
-offset_top = 100.0
-offset_right = 150.0
-offset_bottom = 160.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.964706, 0.690196, 0.0705882, 1)
-theme_override_font_sizes/font_size = 48
-text = "commune"
-horizontal_alignment = 1
-
-[node name="Subtitle" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -180.0
-offset_top = 170.0
-offset_right = 180.0
-offset_bottom = 220.0
-grow_horizontal = 2
-text = "from each according to ability,
-to each according to need."
-horizontal_alignment = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -50.0
-offset_right = 100.0
+offset_left = -150.0
+offset_top = -150.0
+offset_right = 150.0
 offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 20
 
-[node name="NewGameButton" type="Button" parent="VBoxContainer"]
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "THE COMMUNE"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="VBox"]
+layout_mode = 2
+text = "From each according to ability,
+to each according to need"
+horizontal_alignment = 1
+
+[node name="NewGameButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "new game"
 
-[node name="ContinueButton" type="Button" parent="VBoxContainer"]
+[node name="ContinueButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "continue"
 
-[node name="SettingsButton" type="Button" parent="VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="VBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "settings"
 
-[node name="IntroText" type="Control" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="IntroText"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.9)
-
-[node name="Label" type="Label" parent="IntroText"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "you are building a self-sustained commune. lead your comrades toward collective progress."
-autowrap_mode = 2
-horizontal_alignment = 1
-
-[node name="StartGameButton" type="Button" parent="IntroText"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -60.0
-offset_top = -150.0
-offset_right = 60.0
-offset_bottom = -100.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "start"
-
-[node name="SettingsPanel" type="Control" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Panel" type="Panel" parent="SettingsPanel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -100.0
-offset_right = 150.0
-offset_bottom = 100.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingsPanel/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = -20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VolumeLabel" type="Label" parent="SettingsPanel/Panel/VBoxContainer"]
-layout_mode = 2
-text = "volume"
-
-[node name="VolumeSlider" type="HSlider" parent="SettingsPanel/Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="EraseSaveButton" type="Button" parent="SettingsPanel/Panel/VBoxContainer"]
-layout_mode = 2
-text = "erase save"
-
-[node name="CloseSettingsButton" type="Button" parent="SettingsPanel/Panel/VBoxContainer"]
-layout_mode = 2
-text = "close"
-
-[connection signal="pressed" from="VBoxContainer/NewGameButton" to="." method="_on_new_game_pressed"]
-[connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="IntroText/StartGameButton" to="." method="_on_start_game_pressed"]
-[connection signal="pressed" from="SettingsPanel/Panel/VBoxContainer/EraseSaveButton" to="." method="_on_erase_save_pressed"]
-[connection signal="pressed" from="SettingsPanel/Panel/VBoxContainer/CloseSettingsButton" to="SettingsPanel" method="set_visible" binds= [false]]
+[connection signal="pressed" from="VBox/NewGameButton" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="VBox/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="VBox/SettingsButton" to="." method="_on_settings_pressed"]

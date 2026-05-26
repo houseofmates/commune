@@ -1,3 +1,4 @@
+class_name House
 extends "res://scripts/buildings/BaseBuilding.gd"
 func _ready():
 	id = "house"

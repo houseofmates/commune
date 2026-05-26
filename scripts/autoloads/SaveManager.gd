@@ -9,7 +9,8 @@ func save_game() -> void:
 		"buildings": [],
 		"last_save_time": Time.get_unix_time_from_system(),
 		"total_workers": GameState.total_workers,
-		"assigned_workers": GameState.assigned_workers
+		"assigned_workers": GameState.assigned_workers,
+		"tutorial_complete": false # Default for now
 	}
 
 	for b in GameState.buildings:
@@ -24,7 +25,6 @@ func save_game() -> void:
 	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(save_data))
-		print("game saved to ", SAVE_PATH)
 
 func load_game() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
@@ -36,18 +36,6 @@ func load_game() -> void:
 	if json:
 		GameState.resources = json.get("resources", GameState.resources)
 		GameState.last_save_time = json.get("last_save_time", Time.get_unix_time_from_system())
-		# Actual building instantiation happens in World.gd or via a signal
-		# For this simple prototype, we'll store it for World.gd to read
-		GameState.buildings = [] # Clear and World.gd will populate
+		GameState.pending_building_data = json.get("buildings", [])
 
-		calculate_offline_gains()
-
-func calculate_offline_gains() -> void:
-	var current_time = Time.get_unix_time_from_system()
-	var diff = current_time - GameState.last_save_time
-	if diff > 0:
-		print("calculating offline gains for ", diff, " seconds")
-		# Simple estimation: use current rates
-		for res_id in GameState.resources.keys():
-			var rate = GameState.production_rates.get(res_id, 0.0)
-			GameState.add_resource(res_id, rate * diff)
+		# Offline gains calculated after rehydration in World or Main

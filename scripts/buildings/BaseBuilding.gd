@@ -1,4 +1,5 @@
 extends StaticBody2D
+class_name BaseBuilding
 
 @export var id: String
 @export var display_name: String
@@ -37,22 +38,28 @@ func setup_building() -> void:
 			break
 
 func upgrade() -> bool:
-	if level < max_level:
-		var cost = get_upgrade_cost()
-		for res_id in cost.keys():
-			if not GameState.consume_resource(res_id, cost[res_id]):
-				return false
+	if level >= max_level:
+		return false
 
-		level += 1
-		# If house, increase capacity
-		if id == "house":
-			worker_capacity += 2
+	var cost = get_upgrade_cost()
 
-		GameState.update_worker_stats()
-		update_ui()
-		EventBus.building_upgraded.emit(self)
-		return true
-	return false
+	# Phase 1: Validation
+	for res_id in cost.keys():
+		if not GameState.has_enough_resources(res_id, cost[res_id]):
+			return false
+
+	# Phase 2: Consumption
+	for res_id in cost.keys():
+		GameState.consume_resource(res_id, cost[res_id])
+
+	level += 1
+	if id == "house":
+		worker_capacity += 2
+
+	GameState.update_worker_stats()
+	update_ui()
+	EventBus.building_upgraded.emit(self)
+	return true
 
 func get_upgrade_cost() -> Dictionary:
 	var base_cost = {}

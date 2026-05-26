@@ -26,12 +26,17 @@ func _init():
 	for path in assets:
 		var dir = path.get_base_dir()
 		if not DirAccess.dir_exists_absolute(dir):
-			DirAccess.make_dir_recursive_absolute(dir)
+			var err = DirAccess.make_dir_recursive_absolute(dir)
+			if err != OK:
+				push_error("Failed to create directory: " + dir)
+				continue
 
-		if not FileAccess.file_exists(path):
-			var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
-			img.fill(Color.WHITE)
-			img.save_png(path)
+		var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
+		img.fill(Color.WHITE)
+		var err = img.save_png(path)
+		if err == OK:
 			print("Generated: ", path)
+		else:
+			push_error("Failed to save PNG: " + path)
 
 	quit()

@@ -1,3 +1,4 @@
+class_name ResourceNode
 extends StaticBody2D
 
 @export var resource_id: String

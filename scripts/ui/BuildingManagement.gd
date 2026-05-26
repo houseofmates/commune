@@ -1,14 +1,15 @@
 extends Control
+class_name BuildingManagement
 
 @onready var name_label: Label = $Panel/VBoxContainer/NameLabel
 @onready var desc_label: Label = $Panel/VBoxContainer/DescLabel
 @onready var prod_label: Label = $Panel/VBoxContainer/ProdLabel
 @onready var upgrade_btn: Button = $Panel/VBoxContainer/UpgradeButton
-@onready var worker_slider: HSlider = $Panel/VBoxContainer/WorkerSlider
+@onready var worker_container: HBoxContainer = $Panel/VBoxContainer/WorkerContainer
 @onready var worker_label: Label = $Panel/VBoxContainer/WorkerLabel
 @onready var demolish_btn: Button = $Panel/VBoxContainer/DemolishButton
 
-var current_building: Node = null
+var current_building: BaseBuilding = null
 
 func _ready() -> void:
 	visible = false
@@ -46,27 +47,43 @@ func update_ui() -> void:
 	upgrade_btn.text = cost_text
 
 	if current_building.id == "house" or current_building.id == "monument":
-		worker_slider.visible = false
+		worker_container.visible = false
 		worker_label.visible = false
 	else:
-		worker_slider.visible = true
+		worker_container.visible = true
 		worker_label.visible = true
-		worker_slider.max_value = current_building.max_workers
-		worker_slider.value = current_building.assigned_workers
 		worker_label.text = "workers: " + str(current_building.assigned_workers) + "/" + str(current_building.max_workers)
+		_update_worker_slots()
+
+func _update_worker_slots() -> void:
+	for child in worker_container.get_children():
+		child.queue_free()
+
+	for i in range(current_building.max_workers):
+		var btn = Button.new()
+		btn.custom_minimum_size = Vector2(40, 40)
+		btn.toggle_mode = true
+		btn.button_pressed = i < current_building.assigned_workers
+		btn.text = "W" if btn.button_pressed else "O"
+		btn.pressed.connect(_on_worker_slot_pressed.bind(i))
+		worker_container.add_child(btn)
+
+func _on_worker_slot_pressed(_index: int) -> void:
+	var active = 0
+	for child in worker_container.get_children():
+		if (child as Button).button_pressed:
+			active += 1
+
+	if not current_building.assign_worker(active):
+		_update_worker_slots() # Revert
+	else:
+		update_ui()
 
 func _on_upgrade_pressed() -> void:
 	if current_building.upgrade():
 		update_ui()
 
-func _on_worker_slider_changed(value: float) -> void:
-	if current_building.assign_worker(int(value)):
-		update_ui()
-	else:
-		worker_slider.value = current_building.assigned_workers
-
 func _on_demolish_pressed() -> void:
-	# Implementation for demolition
 	GameState.buildings.erase(current_building)
 	current_building.queue_free()
 	current_building = null

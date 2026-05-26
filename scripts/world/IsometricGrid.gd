@@ -1,3 +1,4 @@
+class_name IsometricGrid
 extends TileMapLayer
 
 const TILE_SIZE = Vector2i(64, 32)

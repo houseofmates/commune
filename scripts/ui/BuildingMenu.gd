@@ -1,4 +1,5 @@
 extends Control
+class_name BuildingMenu
 
 @onready var container: GridContainer = $Panel/ScrollContainer/GridContainer
 @onready var panel: Panel = $Panel
@@ -30,12 +31,14 @@ func _on_button_up(btn: Button) -> void:
 	tween.tween_property(btn, "scale", Vector2.ONE, 0.1)
 
 func _on_building_selected(b_data: Dictionary) -> void:
-	# Check unlock and cost
-	var unlocked = GameState.resources["labor_vouchers"] >= b_data.get("unlock_at_labor_vouchers", 0)
+	var unlocked = GameState.get_resource_amount("labor_vouchers") >= b_data.get("unlock_at_labor_vouchers", 0)
 	if not unlocked: return
 
 	if GameState.consume_resource("labor_vouchers", b_data["cost"].get("labor_vouchers", 0)):
-		EventBus.build_requested.emit(b_data["id"], Vector2.ZERO)
+		# In a real game we would enter placement mode
+		# For now we'll send a position in the center
+		var center = get_viewport_rect().size / 2
+		EventBus.build_requested.emit(b_data["id"], center)
 		toggle()
 
 func toggle() -> void:
