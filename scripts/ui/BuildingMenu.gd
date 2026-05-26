@@ -28,18 +28,23 @@ func _on_button_down(btn: Button) -> void:
 
 func _on_button_up(btn: Button) -> void:
 	var tween = create_tween()
-	tween.tween_property(btn, "scale", Vector2.ONE, 0.1)
+	tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
 
 func _on_building_selected(b_data: Dictionary) -> void:
-	var unlocked = GameState.get_resource_amount("labor_vouchers") >= b_data.get("unlock_at_labor_vouchers", 0)
-	if not unlocked: return
+	var can_afford = true
+	for res_id in b_data["cost"].keys():
+		if not GameState.has_enough_resources(res_id, b_data["cost"][res_id]):
+			can_afford = false
+			break
 
-	if GameState.consume_resource("labor_vouchers", b_data["cost"].get("labor_vouchers", 0)):
-		# In a real game we would enter placement mode
-		# For now we'll send a position in the center
-		var center = get_viewport_rect().size / 2
-		EventBus.build_requested.emit(b_data["id"], center)
-		toggle()
+	if can_afford:
+		# Enter placement mode instead of consuming/placing immediately
+		var world = get_tree().root.find_child("World", true, false)
+		if world:
+			var placer = world.find_child("BuildingPlacer", true, false) as BuildingPlacer
+			if placer:
+				placer.start_placement(b_data["id"], b_data["cost"])
+				toggle()
 
 func toggle() -> void:
 	var tween = create_tween()
@@ -56,4 +61,4 @@ func toggle() -> void:
 		visible = true
 		panel.scale = Vector2(0.9, 0.9)
 		tween.tween_property(self, "modulate:a", 1.0, 0.3)
-		tween.tween_property(panel, "scale", Vector2.ONE, 0.3)
+		tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.3)

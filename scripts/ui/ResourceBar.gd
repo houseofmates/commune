@@ -15,9 +15,15 @@ func _on_resource_updated(res_id: String, amount: float) -> void:
 	var label = find_child(label_name, true, false)
 	if label:
 		label.text = str(int(amount))
-		_flash_label(label)
+		_animate_change(label)
 
-func _flash_label(node: Control) -> void:
+func _animate_change(node: Control) -> void:
 	var tween = create_tween()
-	tween.tween_property(node, "scale", Vector2(1.2, 1.2), 0.15)
-	tween.tween_property(node, "scale", Vector2.ONE, 0.15)
+	tween.set_parallel(true)
+	tween.tween_property(node, "scale", Vector2(1.1, 1.1), 0.15)
+	tween.tween_property(node, "modulate", Color.WHITE, 0.15).from(Color.YELLOW)
+
+	tween.chain()
+	tween.set_parallel(true)
+	tween.tween_property(node, "scale", Vector2(1.0, 1.0), 0.15)
+	tween.tween_property(node, "modulate", Color.WHITE, 0.15)

@@ -70,15 +70,8 @@ text = "erase save data"
 layout_mode = 2
 text = "close"
 
-[node name="EraseConfirmation" type="ConfirmationDialog" parent="."]
-title = "Erase Save Data"
-initial_position = 2
-size = Vector2i(400, 150)
-dialog_text = "Are you sure you want to erase all save data? This action cannot be undone and the application will quit."
-
 [connection signal="value_changed" from="Panel/VBox/MasterSlider" to="." method="_on_master_slider_changed"]
 [connection signal="value_changed" from="Panel/VBox/SFXSlider" to="." method="_on_sfx_slider_changed"]
 [connection signal="value_changed" from="Panel/VBox/MusicSlider" to="." method="_on_music_slider_changed"]
 [connection signal="pressed" from="Panel/VBox/EraseButton" to="." method="_on_erase_save_pressed"]
 [connection signal="pressed" from="Panel/VBox/CloseButton" to="." method="_on_close_pressed"]
-[connection signal="confirmed" from="EraseConfirmation" to="." method="_on_erase_save_confirmed"]

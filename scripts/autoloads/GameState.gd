@@ -1,3 +1,4 @@
+class_name GameState
 extends Node
 
 ## Global state manager for the commune
@@ -16,6 +17,7 @@ var pending_building_data: Array = []
 var total_workers: int = 0
 var assigned_workers: int = 0
 var last_save_time: int = 0
+var tutorial_complete: bool = false
 
 func _ready() -> void:
 	last_save_time = Time.get_unix_time_from_system()
@@ -40,8 +42,6 @@ func add_resource(id: String, amount: float) -> void:
 
 ## Consumes amount of resource if available. Returns success.
 func consume_resource(id: String, amount: float) -> bool:
-	if amount <= 0:
-		return false
 	if has_enough_resources(id, amount):
 		resources[id] -= amount
 		EventBus.resource_updated.emit(id, resources[id])
@@ -61,8 +61,7 @@ func get_building_data() -> Array:
 	var file = FileAccess.open("res://data/buildings.json", FileAccess.READ)
 	if file:
 		var json = JSON.parse_string(file.get_as_text())
-		if json and json is Array:
-			return json
+		return json if json else []
 	return []
 
 ## Recalculates total worker capacity and assignments

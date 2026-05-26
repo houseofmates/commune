@@ -9,6 +9,10 @@ class_name JohnSprite
 
 var bob_offset: float = 0.0
 
+func _ready():
+	# Ensure visibility on mobile
+	scale = Vector2(1.5, 1.5)
+
 func _draw() -> void:
 	# Bobbing effect
 	var draw_pos = Vector2(0, bob_offset)

@@ -10,6 +10,9 @@ signal resource_updated(resource_id: String, amount: float)
 signal building_placed(building: Node)
 signal building_upgraded(building: Node)
 signal save_triggered()
+signal monument_completed(pos: Vector2)
 
 # Character Signals
 signal character_interacted(building: Node)
+
+signal resource_gained_at(res_id: String, amount: float, pos: Vector2)

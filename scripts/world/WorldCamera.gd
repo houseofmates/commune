@@ -1,4 +1,5 @@
 extends Camera2D
+class_name WorldCamera
 
 @export var min_zoom: float = 0.5
 @export var max_zoom: float = 2.0
@@ -6,9 +7,7 @@ extends Camera2D
 @export var lerp_weight: float = 0.1
 
 var target_zoom: float = 1.0
-var target_offset: Vector2 = Vector2.ZERO
 var is_dragging: bool = false
-var last_drag_pos: Vector2
 
 @onready var character: Node2D = get_tree().root.find_child("Character", true, false)
 
@@ -32,8 +31,10 @@ func _input(event: InputEvent) -> void:
 		target_zoom = clamp(target_zoom * event.relative_scale, min_zoom, max_zoom)
 
 	if event is InputEventScreenDrag:
-		if event.index > 0: # Two finger drag to pan
-			is_dragging = true
+		is_dragging = Input.get_touch_count() > 1
+		if is_dragging:
 			global_position -= event.relative / zoom
-		else:
-			is_dragging = false
+
+	if event is InputEventScreenTouch:
+		if not event.pressed:
+			is_dragging = Input.get_touch_count() > 1
