@@ -1,7 +1,7 @@
 config_version=5
 
 [application]
-config/name="The Commune"
+config/name="the commune"
 run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
@@ -20,3 +20,7 @@ window/handheld/orientation=1
 
 [rendering]
 2d/snap/snap_2d_transforms_to_pixel=true
+
+[gui]
+theme/custom_font="res://assets/fonts/VarelaRound-Regular.ttf"
+theme/default_font_size=16

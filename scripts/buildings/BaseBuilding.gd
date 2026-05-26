@@ -73,7 +73,7 @@ func get_consumption() -> Dictionary:
 
 func update_ui() -> void:
 	if label:
-		label.text = "%s (Lvl %d)" % [display_name, level]
+		label.text = "%s (lvl %d)" % [display_name, level]
 
 func interact() -> void:
 	print("Interacted with ", display_name)

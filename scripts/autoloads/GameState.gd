@@ -1,5 +1,11 @@
 extends Node
 
+const COLOR_BG_PRIMARY = Color("#050505")
+const COLOR_BG_DARK = Color("#000000")
+const COLOR_ACCENT_YELLOW = Color("#f6b012")
+const COLOR_ACCENT_BLUE = Color("#3c9fdd")
+const COLOR_TEXT_PRIMARY = Color("#ffffff")
+
 var resources: Dictionary = {
 	"food": 0.0,
 	"energy": 0.0,
@@ -21,10 +27,10 @@ var production_rates: Dictionary = {
 	"energy": 0.0,
 	"materials": 0.0,
 	"knowledge": 0.0,
-	"labor_points": 1.0 # Base labor generation
+	"labor_points": 1.0
 }
 
-var buildings: Array = [] # List of active building instances data
+var buildings: Array = []
 var last_save_time: int = 0
 
 func _ready() -> void:

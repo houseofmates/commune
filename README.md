@@ -1,10 +1,10 @@
-# The Commune
+# the commune
 
 A socialist/communist themed idle/incremental game built with Godot 4.3.
 
 ## Overview
 
-In "The Commune", you build and manage a self-sustaining worker community. Manage resources, build infrastructure, and grow the collective through labor and knowledge.
+In "the commune", you build and manage a self-sustaining worker community. Manage resources, build infrastructure, and grow the collective through labor and knowledge.
 
 ## Architecture
 
