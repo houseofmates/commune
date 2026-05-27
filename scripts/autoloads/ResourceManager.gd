@@ -15,7 +15,7 @@ func _process(delta: float) -> void:
 	save_timer += delta
 	if save_timer >= 60.0:
 		save_timer = 0.0
-		var sm = get_tree().root.find_child("SaveManager", true, false)
+		var sm = get_node_or_null("/root/SaveManager") as SaveManager
 		if sm: sm.save_game()
 
 func _on_tick() -> void:

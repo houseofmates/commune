@@ -12,8 +12,6 @@ const BUILDING_SCENES = {
 	"house": "res://scenes/buildings/House.tscn",
 	"farm": "res://scenes/buildings/Farm.tscn",
 	"workshop": "res://scenes/buildings/Workshop.tscn",
-	"power_plant": "res://scenes/buildings/PowerPlant.tscn",
-	"library": "res://scenes/buildings/Library.tscn",
 	"foresters_hut": "res://scenes/buildings/ForestersHut.tscn",
 	"quarry": "res://scenes/buildings/Quarry.tscn",
 	"mine": "res://scenes/buildings/Mine.tscn",
@@ -35,6 +33,9 @@ func _ready() -> void:
 	add_child(preview_sprite)
 
 func start_placement(id: String, cost: Dictionary) -> void:
+	cancel_placement()
+	cancel_placement()
+	cancel_placement()
 	current_building_id = id
 	current_cost = cost
 	is_placing = true

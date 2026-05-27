@@ -37,7 +37,7 @@ func _init_resources() -> void:
 func add_resource(id: String, amount: float) -> void:
 	if not resources.has(id):
 		resources[id] = 0.0
-	resources[id] = min(resources[id] + amount, max_storage.get(id, INF))
+	resources[id] = clamp(resources[id] + amount, 0.0, max_storage.get(id, INF))
 	EventBus.resource_updated.emit(id, resources[id])
 
 ## Consumes amount of resource if available. Returns success.

@@ -2,7 +2,7 @@
 extends SceneTree
 
 func _init():
-	var buildings = ["house", "farm", "workshop", "library", "power_plant", "foresters_hut", "quarry", "mine", "sheep_farm", "mill", "sawmill", "stonemason", "smelter", "bakery", "blacksmith", "tailor", "monument"]
+	var buildings = ["house", "farm", "workshop", "foresters_hut", "quarry", "mine", "sheep_farm", "mill", "sawmill", "stonemason", "smelter", "bakery", "blacksmith", "tailor", "monument"]
 	var resources = ["labor_vouchers", "wheat", "logs", "stone", "iron_ore", "flour", "planks", "stone_blocks", "iron_ingots", "bread", "furniture", "tools", "wool", "clothing"]
 
 	var base_path = "res://assets/sprites/"

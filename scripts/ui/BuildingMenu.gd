@@ -4,13 +4,14 @@ class_name BuildingMenu
 @onready var container: GridContainer = $Panel/ScrollContainer/GridContainer
 @onready var panel: Panel = $Panel
 
+var needs_refresh: bool = false
+
 func _ready() -> void:
 	visible = false
 	modulate.a = 0
 	EventBus.resource_updated.connect(_on_resource_updated)
 
 func populate_menu() -> void:
-	# Clear existing
 	for child in container.get_children():
 		child.queue_free()
 
@@ -37,9 +38,14 @@ func populate_menu() -> void:
 		btn.button_up.connect(_on_button_up.bind(btn))
 		container.add_child(btn)
 
+	needs_refresh = false
+
 func _on_resource_updated(res_id: String, _amount: float) -> void:
-	if res_id == "labor_vouchers" and visible:
-		populate_menu()
+	if res_id == "labor_vouchers":
+		if visible:
+			populate_menu()
+		else:
+			needs_refresh = true
 
 func _on_button_down(btn: Button) -> void:
 	var tween = create_tween()
@@ -57,7 +63,7 @@ func _on_building_selected(b_data: Dictionary) -> void:
 			break
 
 	if can_afford:
-		var world = get_tree().root.find_child("World", true, false)
+		var world = get_node_or_null("/root/Main/World")
 		if world:
 			var placer = world.find_child("BuildingPlacer", true, false) as BuildingPlacer
 			if placer:
@@ -76,7 +82,8 @@ func toggle() -> void:
 		await tween.finished
 		visible = false
 	else:
-		populate_menu() # Refresh on open
+		if needs_refresh or container.get_child_count() == 0:
+			populate_menu()
 		visible = true
 		panel.scale = Vector2(0.9, 0.9)
 		tween.tween_property(self, "modulate:a", 1.0, 0.3)

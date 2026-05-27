@@ -52,20 +52,27 @@ func complete_monument() -> void:
 
 	var panel = Panel.new()
 	panel.anchors_preset = Control.PRESET_FULL_RECT
+	panel.self_modulate = Color("#050505")
 	victory_canvas.add_child(panel)
+
+	var font = load("res://assets/fonts/VarelaRound-Regular.ttf")
 
 	var title = Label.new()
 	title.text = "monument to labour completed"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP, Control.PRESET_MODE_KEEP_SIZE, 50)
-	title.theme_override_fonts/font = load("res://assets/fonts/VarelaRound-Regular.ttf")
+	title.theme_override_fonts/font = font
+	title.theme_override_font_sizes/font_size = 32
+	title.theme_override_colors/font_color = Color("#ffaf00")
 	panel.add_child(title)
 
 	var credits = Label.new()
-	credits.text = "the collective thrives.\n\nfrom each according to ability,\nto each according to need.\n\ncredits:\nyou & the people\ngodot engine\npkm aesthetic"
+	credits.text = "the collective thrives.\n\nfrom each according to ability,\nto each according to need.\n\ncredits:\nyou \& the people\ngodot engine\npkm aesthetic"
 	credits.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	credits.set_anchors_and_offsets_preset(Control.PRESET_CENTER, Control.PRESET_MODE_KEEP_SIZE)
+	credits.theme_override_fonts/font = font
+	credits.theme_override_font_sizes/font_size = 18
 	panel.add_child(credits)
 
 	var btn = Button.new()
