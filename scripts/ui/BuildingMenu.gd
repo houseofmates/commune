@@ -63,7 +63,7 @@ func _on_building_selected(b_data: Dictionary) -> void:
 			break
 
 	if can_afford:
-		var world = get_node_or_null("/root/Main/World")
+		var world = get_node_or_null("/root/Main/World3D")
 		if world:
 			var placer = world.find_child("BuildingPlacer", true, false) as BuildingPlacer
 			if placer:

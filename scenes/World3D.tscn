@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/World3D.gd" id="1_world"]
+[ext_resource type="PackedScene" path="res://scenes/character/Character3D.tscn" id="2_player"]
+[ext_resource type="Script" path="res://scripts/world/BuildingPlacer.gd" id="3_placer"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.0196078, 0.0196078, 0.0196078, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.1, 0.08, 0.08, 1)
+
+[node name="World3D" type="Node3D"]
+script = ExtResource("1_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 0, 20, 0)
+shadow_enabled = true
+
+[node name="CameraRig" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20, 0)
+projection = 1
+size = 15.0
+
+[node name="Ground" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+size = Vector3(100, 1, 100)
+material = { "albedo_color": [0.05, 0.05, 0.05, 1] }
+
+[node name="Character3D" parent="." instance=ExtResource("2_player")]
+
+[node name="BuildingPlacer" type="Node3D" parent="."]
+script = ExtResource("3_placer")
