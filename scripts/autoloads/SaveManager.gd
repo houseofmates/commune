@@ -1,5 +1,5 @@
-class_name SaveManager
 extends Node
+class_name SaveManager
 
 const SAVE_PATH = "user://commune_save.json"
 
@@ -40,14 +40,10 @@ func load_game() -> void:
 		GameState.pending_building_data = json.get("buildings", [])
 		GameState.tutorial_complete = json.get("tutorial_complete", false)
 
-		# Offline gains calculated after rehydration in World or Main
-
 func calculate_offline_gains() -> void:
 	var current_time = Time.get_unix_time_from_system()
 	var diff = current_time - GameState.last_save_time
 	if diff > 0:
-		pass # gains for ", diff, " seconds")
-		# Simple estimation: use current rates
 		for res_id in GameState.resources.keys():
 			var rate = GameState.production_rates.get(res_id, 0.0)
 			GameState.add_resource(res_id, rate * diff)

@@ -1,3 +1,4 @@
+class_name AudioManager
 extends Node
 class_name AudioManager
 
@@ -18,6 +19,7 @@ func _ready() -> void:
 
 	EventBus.building_placed.connect(func(_b): play_beep(440, 0.15))
 	EventBus.building_upgraded.connect(func(_b): play_beep(880, 0.2))
+	EventBus.resource_updated.connect(func(_id, _amount): play_beep(220, 0.05))
 
 func _setup_ambient() -> void:
 	var stream = AudioStreamGenerator.new()
@@ -37,6 +39,7 @@ func _fill_ambient_buffer() -> void:
 
 	while to_fill > 0:
 		var t = Time.get_ticks_msec() / 1000.0
+		# 60Hz sine wave with slow LFO
 		var freq = 60.0 + sin(t * 0.5) * 2.0
 		var increment = freq / sample_hz
 		ambient_phase = fmod(ambient_phase + increment, 1.0)
@@ -45,7 +48,7 @@ func _fill_ambient_buffer() -> void:
 		to_fill -= 1
 
 func play_beep(frequency: float, duration: float) -> void:
-	# Avoid excessive spam
+	# Avoid excessive spam for resource updates
 	if frequency == 220 and randf() > 0.1: return
 
 	var stream = AudioStreamGenerator.new()

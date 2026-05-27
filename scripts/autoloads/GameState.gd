@@ -1,5 +1,5 @@
-class_name GameState
 extends Node
+class_name GameState
 
 ## Global state manager for the commune
 const COLOR_BG_PRIMARY = Color("#050505")

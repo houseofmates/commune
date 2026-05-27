@@ -24,6 +24,7 @@ func _ready() -> void:
 	GameState.update_worker_stats()
 	update_ui()
 
+## Configures the building based on JSON data
 func setup_building() -> void:
 	var data = GameState.get_building_data()
 	for b_data in data:
@@ -37,6 +38,7 @@ func setup_building() -> void:
 				worker_capacity = b_data["worker_capacity"]
 			break
 
+## Upgrades the building level if affordable
 func upgrade() -> bool:
 	if level >= max_level:
 		return false
@@ -59,6 +61,7 @@ func upgrade() -> bool:
 	EventBus.building_upgraded.emit(self)
 	return true
 
+## Calculates the cost for the next upgrade
 func get_upgrade_cost() -> Dictionary:
 	var base_cost = {}
 	var data = GameState.get_building_data()
@@ -72,28 +75,29 @@ func get_upgrade_cost() -> Dictionary:
 		current_cost[res_id] = base_cost[res_id] * pow(upgrade_cost_multiplier, level - 1)
 	return current_cost
 
+## Returns current production values (level * efficiency applied)
 func get_production() -> Dictionary:
-	# Efficiency is applied here: base * level * efficiency
 	var efficiency = get_efficiency()
 	var current_prod = {}
 	for res_id in production.keys():
 		current_prod[res_id] = production[res_id] * level * efficiency
 	return current_prod
 
+## Returns current consumption values (level * efficiency applied)
 func get_consumption() -> Dictionary:
-	# Efficiency is applied here: base * level * efficiency
 	var efficiency = get_efficiency()
 	var current_cons = {}
 	for res_id in consumption.keys():
 		current_cons[res_id] = consumption[res_id] * level * efficiency
 	return current_cons
 
+## Calculates worker efficiency
 func get_efficiency() -> float:
-	# Efficiency is 1.0 for non-worker buildings
 	if id == "house" or id == "monument" or max_workers == 0:
 		return 1.0
 	return float(assigned_workers) / float(max_workers)
 
+## Assigns workers to the building
 func assign_worker(amount: int) -> bool:
 	var new_total_assigned = GameState.assigned_workers - assigned_workers + amount
 	if new_total_assigned <= GameState.total_workers and amount <= max_workers and amount >= 0:
@@ -103,11 +107,13 @@ func assign_worker(amount: int) -> bool:
 		return true
 	return false
 
+## Updates the building's world-space UI
 func update_ui() -> void:
 	if label:
 		label.text = "%s (lvl %d)\nworkers: %d/%d" % [display_name, level, assigned_workers, max_workers]
 		if id == "house":
 			label.text = "%s (lvl %d)\ncapacity: %d" % [display_name, level, worker_capacity]
 
+## Called when the character interacts with the building
 func interact() -> void:
 	EventBus.building_selected.emit({"instance": self})

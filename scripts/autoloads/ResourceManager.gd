@@ -1,5 +1,5 @@
-class_name ResourceManager
 extends Node
+class_name ResourceManager
 
 var tick_timer: Timer
 var save_timer: float = 0.0
@@ -15,7 +15,8 @@ func _process(delta: float) -> void:
 	save_timer += delta
 	if save_timer >= 60.0:
 		save_timer = 0.0
-		SaveManager.save_game()
+		var sm = get_tree().root.find_child("SaveManager", true, false)
+		if sm: sm.save_game()
 
 func _on_tick() -> void:
 	update_production_rates()

@@ -39,7 +39,7 @@ func _generate_image(path: String, color: Color, label: String):
 	var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	img.fill(color)
 
-	# Draw a border and a cross pattern to ensure distinctiveness and size
+	# Draw a border and a simple pattern
 	for x in range(32):
 		img.set_pixel(x, 0, Color.BLACK)
 		img.set_pixel(x, 31, Color.BLACK)

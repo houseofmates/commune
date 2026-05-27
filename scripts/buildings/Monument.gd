@@ -59,6 +59,7 @@ func complete_monument() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP, Control.PRESET_MODE_KEEP_SIZE, 50)
+	title.theme_override_fonts/font = load("res://assets/fonts/VarelaRound-Regular.ttf")
 	panel.add_child(title)
 
 	var credits = Label.new()
