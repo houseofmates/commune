@@ -24,10 +24,16 @@ func _on_button_up(btn: Button) -> void:
 	var tween = create_tween()
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(btn, "scale", Vector2.ONE, 0.1)
+	tween.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
 
 func _on_build_button_pressed() -> void:
+	AudioManager.play_click()
 	building_menu.toggle()
+
+func _on_settings_button_pressed() -> void:
+	AudioManager.play_click()
+	var settings = load("res://scenes/ui/SettingsPanel.tscn").instantiate()
+	add_child(settings)
 
 func _on_save_triggered() -> void:
 	save_icon.visible = true

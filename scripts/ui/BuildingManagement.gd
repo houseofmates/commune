@@ -18,9 +18,11 @@ func _ready() -> void:
 func _on_building_selected(data: Dictionary) -> void:
 	current_building = data["instance"]
 	update_ui()
+		EventBus.workers_need_sync.emit()
 	visible = true
 
 func update_ui() -> void:
+		EventBus.workers_need_sync.emit()
 	if not current_building: return
 
 	name_label.text = current_building.display_name + " (lvl " + str(current_building.level) + ")"
@@ -64,7 +66,7 @@ func _update_worker_slots() -> void:
 		btn.custom_minimum_size = Vector2(40, 40)
 		btn.toggle_mode = true
 		btn.button_pressed = i < current_building.assigned_workers
-		btn.text = "W" if btn.button_pressed else "O"
+		btn.text = "w" if btn.button_pressed else "O"
 		btn.pressed.connect(_on_worker_slot_pressed.bind(i))
 		worker_container.add_child(btn)
 
@@ -75,13 +77,16 @@ func _on_worker_slot_pressed(_index: int) -> void:
 			active += 1
 
 	if not current_building.assign_worker(active):
+			_sync_worker_assignment_globally()
 		_update_worker_slots() # Revert
 	else:
 		update_ui()
+		EventBus.workers_need_sync.emit()
 
 func _on_upgrade_pressed() -> void:
 	if current_building.upgrade():
 		update_ui()
+		EventBus.workers_need_sync.emit()
 
 func _on_demolish_pressed() -> void:
 	GameState.buildings.erase(current_building)

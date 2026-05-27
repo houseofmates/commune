@@ -55,6 +55,7 @@ display_name = "sheep farm"
 node_color = Color(0.9, 0.9, 0.9, 1)
 
 [node name="Character" parent="." instance=ExtResource("5_char")]
+groups=["player"]
 position = Vector2(195, 422)
 
 [node name="WorldCamera" type="Camera2D" parent="."]
@@ -62,9 +63,3 @@ position = Vector2(195, 422)
 script = ExtResource("3_camera")
 
 [node name="InteractionManager" parent="." instance=ExtResource("7_interact")]
-
-[node name="Worker1" parent="." instance=ExtResource("8_worker")]
-position = Vector2(300, 300)
-
-[node name="Worker2" parent="." instance=ExtResource("8_worker")]
-position = Vector2(100, 100)

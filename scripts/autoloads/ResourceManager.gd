@@ -36,11 +36,11 @@ func update_production_rates() -> void:
 
 	for b in GameState.buildings:
 		if is_instance_valid(b):
-			var efficiency = (b as BaseBuilding).get_efficiency()
+			# BaseBuilding.get_production() and get_consumption() already include efficiency
 			var prod = b.get_production()
 			for res_id in prod.keys():
-				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) + prod[res_id] * efficiency
+				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) + prod[res_id]
 
 			var cons = b.get_consumption()
 			for res_id in cons.keys():
-				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) - cons[res_id] * efficiency
+				GameState.production_rates[res_id] = GameState.production_rates.get(res_id, 0.0) - cons[res_id]

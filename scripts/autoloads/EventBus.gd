@@ -16,3 +16,5 @@ signal monument_completed(pos: Vector2)
 signal character_interacted(building: Node)
 
 signal resource_gained_at(res_id: String, amount: float, pos: Vector2)
+
+signal workers_need_sync()

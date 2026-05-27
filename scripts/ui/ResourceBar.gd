@@ -1,29 +1,45 @@
 extends HBoxContainer
 class_name ResourceBar
 
+var labels: Dictionary = {}
+
 func _ready() -> void:
-	EventBus.resource_updated.connect(_on_resource_updated)
+	# Clear initial placeholders
+	for child in get_children():
+		child.queue_free()
+
+	# Populate based on all resources in GameState
 	for res_id in GameState.resources.keys():
-		_on_resource_updated(res_id, GameState.resources[res_id])
+		_create_resource_label(res_id)
+
+	EventBus.resource_updated.connect(_on_resource_updated)
+
+func _create_resource_label(res_id: String) -> void:
+	var label = Label.new()
+	label.name = res_id.capitalize() + "Label"
+	# In a real game we'd add an icon here too
+	add_child(label)
+	labels[res_id] = label
+	_update_label_text(res_id, GameState.resources[res_id])
 
 func _on_resource_updated(res_id: String, amount: float) -> void:
-	var label_name = ""
-	match res_id:
-		"bread": label_name = "FoodLabel"
-		"labor_vouchers": label_name = "LaborPointsLabel"
+	if not labels.has(res_id):
+		_create_resource_label(res_id)
 
-	var label = find_child(label_name, true, false)
-	if label:
-		label.text = str(int(amount))
-		_animate_change(label)
+	_update_label_text(res_id, amount)
+	_animate_change(labels[res_id])
+
+func _update_label_text(res_id: String, amount: float) -> void:
+	var label = labels[res_id]
+	label.text = res_id.replace("_", " ") + ": " + str(int(amount))
 
 func _animate_change(node: Control) -> void:
 	var tween = create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(node, "scale", Vector2(1.1, 1.1), 0.15)
-	tween.tween_property(node, "modulate", Color.WHITE, 0.15).from(Color.YELLOW)
+	tween.tween_property(node, "modulate", Color.YELLOW, 0.15)
 
 	tween.chain()
 	tween.set_parallel(true)
-	tween.tween_property(node, "scale", Vector2(1.0, 1.0), 0.15)
+	tween.tween_property(node, "scale", Vector2.ONE, 0.15)
 	tween.tween_property(node, "modulate", Color.WHITE, 0.15)

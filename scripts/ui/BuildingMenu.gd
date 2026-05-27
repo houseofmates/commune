@@ -7,20 +7,39 @@ class_name BuildingMenu
 func _ready() -> void:
 	visible = false
 	modulate.a = 0
-	populate_menu()
+	EventBus.resource_updated.connect(_on_resource_updated)
 
 func populate_menu() -> void:
+	# Clear existing
+	for child in container.get_children():
+		child.queue_free()
+
 	var buildings = GameState.get_building_data()
+	var current_lv = GameState.get_resource_amount("labor_vouchers")
+
 	for b in buildings:
+		var unlock_lv = b.get("unlock_at_labor_vouchers", 0)
+		var is_unlocked = current_lv >= unlock_lv
+
 		var btn = Button.new()
-		btn.text = b["display_name"].to_lower() + "\n(" + str(b["cost"].get("labor_vouchers", 0)) + " lv)"
+		if is_unlocked:
+			btn.text = b["display_name"].to_lower() + "\n(" + str(b["cost"].get("labor_vouchers", 0)) + " lv)"
+			btn.pressed.connect(_on_building_selected.bind(b))
+		else:
+			btn.text = "locked\n(req: " + str(unlock_lv) + " lv)"
+			btn.disabled = true
+			btn.modulate = Color(0.5, 0.5, 0.5, 0.8)
+
 		btn.custom_minimum_size = Vector2(100, 100)
 		btn.theme_override_fonts/font = load("res://assets/fonts/VarelaRound-Regular.ttf")
 		btn.theme_override_font_sizes/font_size = 12
-		btn.pressed.connect(_on_building_selected.bind(b))
 		btn.button_down.connect(_on_button_down.bind(btn))
 		btn.button_up.connect(_on_button_up.bind(btn))
 		container.add_child(btn)
+
+func _on_resource_updated(res_id: String, _amount: float) -> void:
+	if res_id == "labor_vouchers" and visible:
+		populate_menu()
 
 func _on_button_down(btn: Button) -> void:
 	var tween = create_tween()
@@ -57,6 +76,7 @@ func toggle() -> void:
 		await tween.finished
 		visible = false
 	else:
+		populate_menu() # Refresh on open
 		visible = true
 		panel.scale = Vector2(0.9, 0.9)
 		tween.tween_property(self, "modulate:a", 1.0, 0.3)

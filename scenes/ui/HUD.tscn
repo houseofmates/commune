@@ -50,6 +50,17 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.964706, 0.690196, 0.0705882, 1)
 text = "build"
 
+[node name="SettingsButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -60.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = 100.0
+grow_horizontal = 0
+text = "settings"
 [node name="WorkerCount" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 2
@@ -71,3 +82,4 @@ visible = false
 layout_mode = 1
 
 [connection signal="pressed" from="BuildButton" to="." method="_on_build_button_pressed"]
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]
