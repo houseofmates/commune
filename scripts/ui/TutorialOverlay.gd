@@ -29,7 +29,7 @@ func _input(event: InputEvent) -> void:
 
 func _update_step() -> void:
 	var step = steps[current_step]
-	label.text = step["text"]
+	label.text = step["text"].to_lower()
 	panel.anchor_left = step["pos"].x - 0.2
 	panel.anchor_right = step["pos"].x + 0.2
 	panel.anchor_top = step["pos"].y - 0.1

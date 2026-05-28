@@ -2,18 +2,29 @@ extends CharacterBody3D
 class_name Character3D
 
 @export var speed: float = 5.0
+@export var body_path: NodePath = "Body"
+@export var animation_player_path: NodePath = "AnimationPlayer"
+
 var target_position: Vector3
 var is_moving: bool = false
 
-@onready var body: Node3D = $Body
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var body: Node3D = get_node_or_null(body_path)
+@onready var animation_player: AnimationPlayer = get_node_or_null(animation_player_path)
 
 func _ready() -> void:
+	if not body:
+		push_error("Character3D: Body node not found at path: %s" % body_path)
+	if not animation_player:
+		push_error("Character3D: AnimationPlayer node not found at path: %s" % animation_player_path)
+
 	target_position = global_position
 	_build_visuals()
-	animation_player.play("idle")
+	if animation_player:
+		animation_player.play("idle")
 
 func _build_visuals() -> void:
+	if not body: return
+
 	var hair_mat = StandardMaterial3D.new()
 	hair_mat.albedo_color = Color("#4A2C0A")
 	var skin_mat = StandardMaterial3D.new()
@@ -137,6 +148,7 @@ func _input(event: InputEvent) -> void:
 
 		var from = camera.project_ray_origin(event.position)
 		var to = from + camera.project_ray_normal(event.position) * 1000
+
 		var plane = Plane(Vector3.UP, 0)
 		var hit = plane.intersects_ray(from, to)
 		if hit:
@@ -145,16 +157,18 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_moving:
-		var dir = (target_position - global_position).normalized()
-		dir.y = 0
-		velocity = dir * speed
-
-		if global_position.distance_to(target_position) < 0.2:
+		var distance = global_position.distance_to(target_position)
+		if distance < 0.2:
 			velocity = Vector3.ZERO
 			is_moving = false
-			animation_player.play("idle", 0.2)
+			if animation_player:
+				animation_player.play("idle", 0.2)
 		else:
-			animation_player.play("walk", 0.2)
+			var dir = (target_position - global_position).normalized()
+			dir.y = 0
+			velocity = dir * speed
+			if animation_player:
+				animation_player.play("walk", 0.2)
 			var look_target = global_position + dir
 			look_at(look_target, Vector3.UP)
 

@@ -1,6 +1,8 @@
 extends Node3D
 class_name World3D
 
+const WORLD_SCALE_FACTOR: float = 32.0
+
 @onready var camera_rig: Node3D = $CameraRig
 @onready var player: CharacterBody3D = $Character3D
 
@@ -15,16 +17,16 @@ func _process(delta: float) -> void:
 		camera_rig.global_position = camera_rig.global_position.lerp(target_pos, 0.1)
 
 func _on_building_placed(building_node: Node) -> void:
-	# Assume building_node has 2D position we can map to 3D
 	var b3d_scene = load("res://scenes/buildings/Building3D.tscn")
 	if b3d_scene:
 		var instance = b3d_scene.instantiate() as Building3D
-		# Extract ID if available
 		if building_node.get("id"):
 			instance.building_id = building_node.id
 
-		# Map 2D position (x, y) to 3D position (x, 0, z)
-		# Since 2D was isometric, we might need a scale factor.
-		# For now, 1:1 mapping.
-		instance.global_position = Vector3(building_node.global_position.x / 32.0, 0, building_node.global_position.y / 32.0)
+		# Use standardized scale factor
+		instance.global_position = Vector3(
+			building_node.global_position.x / WORLD_SCALE_FACTOR,
+			0,
+			building_node.global_position.y / WORLD_SCALE_FACTOR
+		)
 		add_child(instance)

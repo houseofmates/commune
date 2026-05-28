@@ -18,33 +18,31 @@ func _ready() -> void:
 func _on_building_selected(data: Dictionary) -> void:
 	current_building = data["instance"]
 	update_ui()
-		EventBus.workers_need_sync.emit()
 	visible = true
 
 func update_ui() -> void:
-		EventBus.workers_need_sync.emit()
 	if not current_building: return
 
-	name_label.text = current_building.display_name + " (lvl " + str(current_building.level) + ")"
-	desc_label.text = "worker capacity: " + str(current_building.worker_capacity) if current_building.id == "house" else "production/consumption based on workers"
+	name_label.text = (current_building.display_name + " (lvl " + str(current_building.level) + ")").to_lower()
+	desc_label.text = ("worker capacity: " + str(current_building.worker_capacity) if current_building.id == "house" else "production/consumption based on workers").to_lower()
 
-	var prod_text = "production:\n"
+	var prod_text = "production:\n".to_lower()
 	var prod = current_building.get_production()
 	for res in prod:
-		prod_text += res + ": " + str(prod[res]) + "/s\n"
+		prod_text += (res + ": " + str(prod[res]) + "/s\n").to_lower()
 
 	var cons = current_building.get_consumption()
 	if cons.size() > 0:
-		prod_text += "consumption:\n"
+		prod_text += "consumption:\n".to_lower()
 		for res in cons:
-			prod_text += res + ": " + str(cons[res]) + "/s\n"
+			prod_text += (res + ": " + str(cons[res]) + "/s\n").to_lower()
 
 	prod_label.text = prod_text
 
 	var cost = current_building.get_upgrade_cost()
-	var cost_text = "upgrade ("
+	var cost_text = "upgrade (".to_lower()
 	for res in cost:
-		cost_text += str(int(cost[res])) + " " + res + " "
+		cost_text += str(int(cost[res])) + " " + res.to_lower() + " "
 	cost_text += ")"
 	upgrade_btn.text = cost_text
 
@@ -54,7 +52,7 @@ func update_ui() -> void:
 	else:
 		worker_container.visible = true
 		worker_label.visible = true
-		worker_label.text = "workers: " + str(current_building.assigned_workers) + "/" + str(current_building.max_workers)
+		worker_label.text = ("workers: " + str(current_building.assigned_workers) + "/" + str(current_building.max_workers)).to_lower()
 		_update_worker_slots()
 
 func _update_worker_slots() -> void:
@@ -66,7 +64,7 @@ func _update_worker_slots() -> void:
 		btn.custom_minimum_size = Vector2(40, 40)
 		btn.toggle_mode = true
 		btn.button_pressed = i < current_building.assigned_workers
-		btn.text = "w" if btn.button_pressed else "O"
+		btn.text = "w" if btn.button_pressed else "o"
 		btn.pressed.connect(_on_worker_slot_pressed.bind(i))
 		worker_container.add_child(btn)
 
@@ -77,7 +75,6 @@ func _on_worker_slot_pressed(_index: int) -> void:
 			active += 1
 
 	if not current_building.assign_worker(active):
-			_sync_worker_assignment_globally()
 		_update_worker_slots() # Revert
 	else:
 		update_ui()

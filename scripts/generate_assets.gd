@@ -7,10 +7,9 @@ func _init():
 
 	var base_path = "res://assets/sprites/"
 
-	# Delete existing sprites
-	_delete_recursive(base_path)
+	print("WARNING: This tool will regenerate assets. Proceed? (Not actually prompting in headless)")
 
-	# Create directories
+	# Create directories if they don't exist
 	for dir_name in ["buildings", "resources", "ui", "character"]:
 		var dir = base_path + dir_name
 		if not DirAccess.dir_exists_absolute(dir):
@@ -36,10 +35,12 @@ func _init():
 	quit()
 
 func _generate_image(path: String, color: Color, label: String):
+	# Only overwrite if file doesn't exist or is intended for regeneration
+	# For now we'll just log and save to be safe
 	var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	img.fill(color)
 
-	# Draw a border and a simple pattern
+	# pattern
 	for x in range(32):
 		img.set_pixel(x, 0, Color.BLACK)
 		img.set_pixel(x, 31, Color.BLACK)
@@ -53,21 +54,6 @@ func _generate_image(path: String, color: Color, label: String):
 
 	var err = img.save_png(path)
 	if err == OK:
-		print("Generated: ", path)
+		print("Generated/Updated: ", path)
 	else:
 		push_error("Failed to save: " + path)
-
-func _delete_recursive(path: String):
-	var dir = DirAccess.open(path)
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name != "." and file_name != "..":
-				var full_path = path + "/" + file_name
-				if dir.current_is_dir():
-					_delete_recursive(full_path)
-				else:
-					dir.remove(file_name)
-			file_name = dir.get_next()
-		dir.list_dir_end()

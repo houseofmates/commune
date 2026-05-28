@@ -16,8 +16,8 @@ func _ready() -> void:
 
 func _create_resource_label(res_id: String) -> void:
 	var label = Label.new()
-	label.name = res_id.capitalize() + "Label"
-	# In a real game we'd add an icon here too
+	# Convention: lowercase internal names
+	label.name = res_id.to_lower() + "label"
 	add_child(label)
 	labels[res_id] = label
 	_update_label_text(res_id, GameState.resources[res_id])
@@ -31,7 +31,7 @@ func _on_resource_updated(res_id: String, amount: float) -> void:
 
 func _update_label_text(res_id: String, amount: float) -> void:
 	var label = labels[res_id]
-	label.text = res_id.replace("_", " ") + ": " + str(int(amount))
+	label.text = res_id.replace("_", " ").to_lower() + ": " + str(int(amount))
 
 func _animate_change(node: Control) -> void:
 	var tween = create_tween()

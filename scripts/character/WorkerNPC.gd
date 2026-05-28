@@ -2,9 +2,13 @@ extends CharacterBody2D
 class_name WorkerNPC
 
 @export var speed: float = 100.0
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
-@onready var visuals: Node2D = $Visuals
-@onready var status_icon: ColorRect = $StatusIcon
+@export var visuals_path: NodePath = "Visuals"
+@export var animation_player_path: NodePath = "AnimationPlayer"
+@export var status_icon_path: NodePath = "StatusIcon"
+
+@onready var visuals: Node2D = get_node_or_null(visuals_path)
+@onready var animation_player: AnimationPlayer = get_node_or_null(animation_player_path)
+@onready var status_icon: ColorRect = get_node_or_null(status_icon_path)
 
 var assigned_building: BaseBuilding = null
 var current_target_node: Node2D = null
@@ -15,7 +19,8 @@ enum State { IDLE, GATHERING, DELIVERING }
 var current_state = State.IDLE
 
 func _ready() -> void:
-	status_icon.visible = true
+	if status_icon:
+		status_icon.visible = true
 	_update_visuals()
 
 func assign_to(building: BaseBuilding) -> void:
@@ -24,6 +29,7 @@ func assign_to(building: BaseBuilding) -> void:
 	_find_nearest_resource()
 
 func _update_visuals() -> void:
+	if not status_icon: return
 	match current_state:
 		State.IDLE: status_icon.color = Color.TRANSPARENT
 		State.GATHERING: status_icon.color = Color.GREEN
@@ -49,7 +55,7 @@ func _find_nearest_resource() -> void:
 	var min_dist = INF
 
 	for t in targets:
-		if t.has_method("get") and t.resource_id == needed_res:
+		if t is ResourceNode and t.resource_id == needed_res:
 			var d = global_position.distance_to(t.global_position)
 			if d < min_dist:
 				min_dist = d
@@ -71,7 +77,8 @@ func _physics_process(delta: float) -> void:
 
 	if dist < 20:
 		velocity = Vector2.ZERO
-		animation_player.play("idle")
+		if animation_player:
+			animation_player.play("idle")
 
 		if current_state == State.GATHERING:
 			gathering_timer += delta
@@ -86,9 +93,10 @@ func _physics_process(delta: float) -> void:
 			_find_nearest_resource()
 			_update_visuals()
 	else:
-		var dir = global_position.direction_to(current_target_node.global_position)
+		var dir = (current_target_node.global_position - global_position).normalized()
 		velocity = dir * speed
-		if dir.x != 0:
+		if visuals and dir.x != 0:
 			visuals.scale.x = -1 if dir.x < 0 else 1
-		animation_player.play("walk")
+		if animation_player:
+			animation_player.play("walk")
 		move_and_slide()

@@ -18,7 +18,7 @@ func _on_music_slider_changed(value: float) -> void:
 func _on_erase_save_pressed() -> void:
 	var confirm = ConfirmationDialog.new()
 	confirm.dialog_text = "are you sure? this cannot be undone."
-	confirm.get_ok_button().text = "erase"
+	confirm.get_ok_button().text = "erase save"
 	confirm.get_cancel_button().text = "cancel"
 	confirm.confirmed.connect(_do_erase)
 	add_child(confirm)

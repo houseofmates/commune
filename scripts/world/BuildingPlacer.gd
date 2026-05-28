@@ -6,18 +6,38 @@ var current_cost: Dictionary = {}
 var is_placing: bool = false
 var preview_instance: Node3D = null
 
+const BUILDING_SCENES = {
+	"house": "res://scenes/buildings/Building3D.tscn",
+	"farm": "res://scenes/buildings/Building3D.tscn",
+	"workshop": "res://scenes/buildings/Building3D.tscn",
+	"foresters_hut": "res://scenes/buildings/Building3D.tscn",
+	"quarry": "res://scenes/buildings/Building3D.tscn",
+	"mine": "res://scenes/buildings/Building3D.tscn",
+	"sheep_farm": "res://scenes/buildings/Building3D.tscn",
+	"mill": "res://scenes/buildings/Building3D.tscn",
+	"sawmill": "res://scenes/buildings/Building3D.tscn",
+	"stonemason": "res://scenes/buildings/Building3D.tscn",
+	"smelter": "res://scenes/buildings/Building3D.tscn",
+	"bakery": "res://scenes/buildings/Building3D.tscn",
+	"blacksmith": "res://scenes/buildings/Building3D.tscn",
+	"tailor": "res://scenes/buildings/Building3D.tscn",
+	"monument": "res://scenes/buildings/Building3D.tscn"
+}
+
+func _ready() -> void:
+	EventBus.build_requested.connect(start_placement)
+
 func start_placement(id: String, cost: Dictionary) -> void:
 	cancel_placement()
 	current_building_id = id
 	current_cost = cost
 	is_placing = true
 
-	# Create preview
 	var scene = load("res://scenes/buildings/Building3D.tscn")
 	if scene:
 		preview_instance = scene.instantiate() as Building3D
 		preview_instance.building_id = id
-		preview_instance.modulate = Color(1, 1, 1, 0.5) # Assuming Building3D handles this or we adjust material
+		# Setup transparency for preview
 		add_child(preview_instance)
 
 func _input(event: InputEvent) -> void:
@@ -43,7 +63,6 @@ func _update_preview_pos(screen_pos: Vector2) -> void:
 	var plane = Plane(Vector3.UP, 0)
 	var hit = plane.intersects_ray(from, to)
 	if hit:
-		# Snap to grid (assuming 4x4 units)
 		var snapped_pos = Vector3(
 			round(hit.x / 4.0) * 4.0,
 			0,
@@ -68,6 +87,8 @@ func place_building() -> void:
 		instance.building_id = current_building_id
 		instance.global_position = preview_instance.global_position
 		get_parent().add_child(instance)
+		# We also need a 2D counterpart for game logic if that's how it works
+		# But the instructions say buildings work in 3D too.
 		EventBus.building_placed.emit(instance)
 
 	cancel_placement()
