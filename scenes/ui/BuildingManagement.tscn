@@ -74,6 +74,5 @@ layout_mode = 2
 text = "close"
 
 [connection signal="pressed" from="Panel/VBoxContainer/UpgradeButton" to="." method="_on_upgrade_pressed"]
-[connection signal="value_changed" from="Panel/VBoxContainer/WorkerContainer" to="." method="_on_worker_slider_changed"]
 [connection signal="pressed" from="Panel/VBoxContainer/DemolishButton" to="." method="_on_demolish_pressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/CloseButton" to="." method="_on_close_pressed"]

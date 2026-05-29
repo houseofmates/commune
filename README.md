@@ -1,6 +1,6 @@
 # the commune
 
-A socialist/communist themed idle/incremental game built with Godot 4.3.
+A socialist/communist-themed idle/incremental game built with Godot 4.3.
 
 ## Overview
 
