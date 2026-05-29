@@ -1,59 +1,44 @@
-@tool
-extends SceneTree
+extends Node
 
-func _init():
-	var buildings = ["house", "farm", "workshop", "foresters_hut", "quarry", "mine", "sheep_farm", "mill", "sawmill", "stonemason", "smelter", "bakery", "blacksmith", "tailor", "monument"]
-	var resources = ["labor_vouchers", "wheat", "logs", "stone", "iron_ore", "flour", "planks", "stone_blocks", "iron_ingots", "bread", "furniture", "tools", "wool", "clothing"]
+func _ready() -> void:
+	_generate_all()
+	get_tree().quit()
 
-	var base_path = "res://assets/sprites/"
+func _generate_all() -> void:
+	for dir in [
+		"assets/sprites/buildings",
+		"assets/sprites/resources",
+		"assets/sprites/ui",
+		"assets/sprites/character"
+	]:
+		var err = DirAccess.make_dir_recursive_absolute(dir)
+		if err != OK:
+			push_error("Failed to create directory: " + dir)
+			continue
 
-	print("WARNING: This tool will regenerate assets. Proceed? (Not actually prompting in headless)")
+	# Buildings
+	var building_names = ["house", "farm", "workshop", "power_plant", "library", "meeting_hall", "clinic", "school", "recreation_center", "water_tower", "blacksmith", "smelter", "stonemason", "tailor", "monument"]
+	for b in building_names:
+		_gen_sprite("assets/sprites/buildings/" + b + ".png", Vector2i(64, 64), Color.DARK_GRAY)
 
-	# Create directories if they don't exist
-	for dir_name in ["buildings", "resources", "ui", "character"]:
-		var dir = base_path + dir_name
-		if not DirAccess.dir_exists_absolute(dir):
-			DirAccess.make_dir_recursive_absolute(dir)
+	# Resources
+	var resource_names = ["food", "energy", "materials", "knowledge", "labor_vouchers", "wood", "stone", "iron_ore", "iron_ingots", "cloth", "tools", "medicine", "culture", "water"]
+	for r in resource_names:
+		_gen_sprite("assets/sprites/resources/" + r + ".png", Vector2i(32, 32), Color.MEDIUM_PURPLE)
 
-	# Generate buildings
-	for i in range(buildings.size()):
-		var b = buildings[i]
-		var color = Color.from_hsv(float(i) / buildings.size(), 0.7, 0.8)
-		_generate_image(base_path + "buildings/" + b + ".png", color, b.substr(0, 1).to_upper())
+	# UI
+	_gen_sprite("assets/sprites/ui/panel.png", Vector2i(128, 128), Color.WEB_GRAY)
+	_gen_sprite("assets/sprites/ui/button.png", Vector2i(64, 64), Color.LIGHT_GRAY)
 
-	# Generate resources
-	for i in range(resources.size()):
-		var r = resources[i]
-		var color = Color.from_hsv(float(i) / resources.size(), 0.5, 0.9)
-		_generate_image(base_path + "resources/" + r + ".png", color, r.substr(0, 1).to_lower())
+	# Character
+	_gen_sprite("assets/sprites/character/john.png", Vector2i(32, 64), Color.SKY_BLUE)
+	_gen_sprite("assets/sprites/character/worker.png", Vector2i(32, 64), Color.SANDY_BROWN)
 
-	# UI and Character
-	_generate_image(base_path + "ui/button.png", Color.DARK_GRAY, "B")
-	_generate_image(base_path + "ui/panel.png", Color.BLACK, "P")
-	_generate_image(base_path + "character/john.png", Color.SADDLE_BROWN, "J")
-
-	quit()
-
-func _generate_image(path: String, color: Color, label: String):
-	# Only overwrite if file doesn't exist or is intended for regeneration
-	# For now we'll just log and save to be safe
-	var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
+func _gen_sprite(path: String, size: Vector2i, color: Color) -> void:
+	var img = Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
 	img.fill(color)
-
-	# pattern
-	for x in range(32):
-		img.set_pixel(x, 0, Color.BLACK)
-		img.set_pixel(x, 31, Color.BLACK)
-	for y in range(32):
-		img.set_pixel(0, y, Color.BLACK)
-		img.set_pixel(31, y, Color.BLACK)
-
-	for i in range(8, 24):
-		img.set_pixel(i, i, Color.WHITE)
-		img.set_pixel(31-i, i, Color.WHITE)
-
 	var err = img.save_png(path)
 	if err == OK:
-		print("Generated/Updated: ", path)
+		print("Generated: ", path)
 	else:
-		push_error("Failed to save: " + path)
+		push_error("Failed to save sprite: " + path)

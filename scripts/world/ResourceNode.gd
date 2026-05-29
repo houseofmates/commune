@@ -1,12 +1,13 @@
-extends StaticBody2D
+extends StaticBody3D
 class_name ResourceNode
 
-@export var resource_id: String
-@export var display_name: String
-@export var node_color: Color = Color.GREEN
+@export var resource_id: String = "wood"
+@onready var color_rect: ColorRect = $ColorRect
+@onready var label: Label = $Label
 
 func _ready() -> void:
-	if has_node("ColorRect"):
-		get_node("ColorRect").color = node_color
-	if has_node("Label"):
-		get_node("Label").text = display_name
+	if not color_rect or not label:
+		push_error("ResourceNode: Missing child nodes")
+		return
+	color_rect.color = GameState.get_resource_color(resource_id)
+	label.text = resource_id.to_lower()

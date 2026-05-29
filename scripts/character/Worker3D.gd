@@ -1,29 +1,38 @@
 extends CharacterBody3D
-class_name Worker3D
+class_name WorkerNPC
 
 @export var speed: float = 3.0
-var target_node: Node3D = null
+@export var targets: Array[Vector3] = []
+var target_index: int = 0
+var current_target: Vector3 = Vector3.ZERO
+var is_waiting: bool = false
+
+@onready var sprite: Sprite3D = $Sprite3D
 
 func _ready() -> void:
-	_build_visuals()
+	if targets.is_empty():
+		return
+	# Fix patrol startup: assign current_target BEFORE incrementing (implied by the logic below)
+	current_target = targets[target_index]
 
-func _build_visuals() -> void:
-	var body_mesh = MeshInstance3D.new()
-	body_mesh.mesh = CylinderMesh.new()
-	body_mesh.mesh.top_radius = 0.1
-	body_mesh.mesh.bottom_radius = 0.3
-	body_mesh.mesh.height = 1.0
+func _physics_process(_delta: float) -> void:
+	if targets.is_empty() or is_waiting:
+		return
 
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color.GRAY
-	body_mesh.material_override = mat
-	body_mesh.position = Vector3(0, 0.5, 0)
-	add_child(body_mesh)
-
-func _physics_process(delta: float) -> void:
-	if is_instance_valid(target_node):
-		var dir = (target_node.global_position - global_position).normalized()
-		dir.y = 0
+	if global_position.distance_to(current_target) < 0.5:
+		velocity = Vector3.ZERO
+		is_waiting = true
+		await get_tree().create_timer(2.0).timeout
+		is_waiting = false
+		target_index = (target_index + 1) % targets.size()
+		current_target = targets[target_index]
+	else:
+		var dir = (current_target - global_position).normalized()
 		velocity = dir * speed
-		if global_position.distance_to(target_node.global_position) > 1.0:
-			move_and_slide()
+		move_and_slide()
+
+		if sprite:
+			if dir.x > 0:
+				sprite.flip_h = false
+			elif dir.x < 0:
+				sprite.flip_h = true

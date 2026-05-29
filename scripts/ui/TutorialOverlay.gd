@@ -22,7 +22,15 @@ func _input(event: InputEvent) -> void:
 		current_step += 1
 		if current_step >= steps.size():
 			GameState.tutorial_complete = true
-			SaveManager.save_game()
+			var sm = get_node_or_null("/root/SaveManager")
+			if sm: sm.save_game()
+
+			var file = FileAccess.open("user://tutorial_done.txt", FileAccess.WRITE)
+			if file:
+				file.store_string("done")
+			else:
+				push_warning("TutorialOverlay: Failed to save completion state")
+
 			queue_free()
 		else:
 			_update_step()

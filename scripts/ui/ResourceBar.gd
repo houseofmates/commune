@@ -30,10 +30,12 @@ func _on_resource_updated(res_id: String, amount: float) -> void:
 	_animate_change(labels[res_id])
 
 func _update_label_text(res_id: String, amount: float) -> void:
-	var label = labels[res_id]
+	var label = labels.get(res_id)
+	if not label: return
 	label.text = res_id.replace("_", " ").to_lower() + ": " + str(int(amount))
 
 func _animate_change(node: Control) -> void:
+	if not node: return
 	var tween = create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(node, "scale", Vector2(1.1, 1.1), 0.15)

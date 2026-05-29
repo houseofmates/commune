@@ -3,10 +3,10 @@ class_name InteractionManager
 
 @export var player_path: NodePath
 @onready var manage_icon: Control = $ManageIcon
-var current_building: Node2D = null
-var interaction_radius: float = 100.0
+var current_building: Node3D = null
+var interaction_radius: float = 5.0
 
-var player: Node2D = null
+var player: Node3D = null
 
 func _ready() -> void:
 	manage_icon.visible = false
@@ -26,7 +26,7 @@ func _process(_delta: float) -> void:
 	var min_dist = interaction_radius
 
 	for b in GameState.buildings:
-		if is_instance_valid(b) and b is Node2D:
+		if is_instance_valid(b) and b is Node3D:
 			var dist = player.global_position.distance_to(b.global_position)
 			if dist < min_dist:
 				min_dist = dist
@@ -35,11 +35,13 @@ func _process(_delta: float) -> void:
 	if closest_b:
 		current_building = closest_b
 		manage_icon.visible = true
-		manage_icon.global_position = get_viewport().get_camera_2d().unproject_position(current_building.global_position + Vector2(0, -60))
+		var cam = get_viewport().get_camera_3d()
+		if cam:
+			manage_icon.global_position = cam.unproject_position(current_building.global_position + Vector3(0, 2, 0))
 	else:
 		current_building = null
 		manage_icon.visible = false
 
 func _on_manage_pressed() -> void:
-	if current_building:
+	if is_instance_valid(current_building):
 		current_building.interact()
