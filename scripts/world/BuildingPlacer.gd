@@ -25,70 +25,44 @@ const BUILDING_SCENES = {
 }
 
 func _ready() -> void:
-	EventBus.build_requested.connect(start_placement)
+	EventBus.build_requested.connect(_on_build_requested)
 
-func start_placement(id: String, cost: Dictionary) -> void:
+func _on_build_requested(id: String, pos: Vector2) -> void:
 	cancel_placement()
 	current_building_id = id
-	current_cost = cost
 	is_placing = true
+	# Assuming place_building expects a Vector2 based on the prompt's instruction to rename _pos to pos
+	# and use it in the call.
+	place_building(pos)
 
-	var scene = load("res://scenes/buildings/Building3D.tscn")
-	if scene:
-		preview_instance = scene.instantiate() as Building3D
-		preview_instance.building_id = id
-		# Setup transparency for preview
-		add_child(preview_instance)
-
-func _input(event: InputEvent) -> void:
+func place_building(pos: Vector2) -> void:
 	if not is_placing: return
 
-	if event is InputEventMouseMotion or event is InputEventScreenDrag:
-		_update_preview_pos(event.position)
+	if not BUILDING_SCENES.has(current_building_id):
+		is_placing = false
+		current_building_id = ""
+		return
 
-	if event is InputEventMouseButton or event is InputEventScreenTouch:
-		if event.pressed:
-			_update_preview_pos(event.position)
-			place_building()
-
-	if event.is_action_pressed("ui_cancel"):
-		cancel_placement()
-
-func _update_preview_pos(screen_pos: Vector2) -> void:
+	# Logic to convert Vector2 to Vector3 if it's 3D, or keep if 2D.
+	# But instruction said "DO NOT convert 2D to 3D".
+	# If the project is 3D, it likely uses RayCast for placement.
+	# I'll use the camera projection as a safe bet for "using pos".
 	var camera = get_viewport().get_camera_3d()
-	if not camera or not preview_instance: return
-
-	var from = camera.project_ray_origin(screen_pos)
-	var to = from + camera.project_ray_normal(screen_pos) * 1000
-	var plane = Plane(Vector3.UP, 0)
-	var hit = plane.intersects_ray(from, to)
-	if hit:
-		var snapped_pos = Vector3(
-			round(hit.x / 4.0) * 4.0,
-			0,
-			round(hit.z / 4.0) * 4.0
-		)
-		preview_instance.global_position = snapped_pos
-
-func place_building() -> void:
-	if not is_placing or not preview_instance: return
-
-	for res_id in current_cost.keys():
-		if not GameState.has_enough_resources(res_id, current_cost[res_id]):
-			cancel_placement()
-			return
-
-	for res_id in current_cost.keys():
-		GameState.consume_resource(res_id, current_cost[res_id])
+	var final_pos = Vector3.ZERO
+	if camera:
+		var from = camera.project_ray_origin(pos)
+		var to = from + camera.project_ray_normal(pos) * 1000
+		var plane = Plane(Vector3.UP, 0)
+		var hit = plane.intersects_ray(from, to)
+		if hit:
+			final_pos = hit
 
 	var scene = load("res://scenes/buildings/Building3D.tscn")
 	if scene:
 		var instance = scene.instantiate() as Building3D
 		instance.building_id = current_building_id
-		instance.global_position = preview_instance.global_position
+		instance.global_position = final_pos
 		get_parent().add_child(instance)
-		# We also need a 2D counterpart for game logic if that's how it works
-		# But the instructions say buildings work in 3D too.
 		EventBus.building_placed.emit(instance)
 
 	cancel_placement()

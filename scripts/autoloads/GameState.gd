@@ -28,10 +28,11 @@ func _init_resources() -> void:
 	var file = FileAccess.open("res://data/resources.json", FileAccess.READ)
 	if file:
 		var data = JSON.parse_string(file.get_as_text())
-		for id in data.keys():
-			resources[id] = 0.0
-			max_storage[id] = 1000.0 if id == "labor_vouchers" else 500.0
-			production_rates[id] = 1.0 if id == "labor_vouchers" else 0.0
+		if data is Dictionary:
+			for id in data.keys():
+				resources[id] = 0.0
+				max_storage[id] = 1000.0 if id == "labor_vouchers" else 500.0
+				production_rates[id] = 1.0 if id == "labor_vouchers" else 0.0
 
 ## Adds amount to a resource, capped by storage
 func add_resource(id: String, amount: float) -> void:
@@ -42,6 +43,9 @@ func add_resource(id: String, amount: float) -> void:
 
 ## Consumes amount of resource if available. Returns success.
 func consume_resource(id: String, amount: float) -> bool:
+	if amount <= 0: return false
+	if amount <= 0: return false
+	if amount <= 0: return false
 	if has_enough_resources(id, amount):
 		resources[id] -= amount
 		EventBus.resource_updated.emit(id, resources[id])
@@ -60,8 +64,9 @@ func get_resource_amount(id: String) -> float:
 func get_building_data() -> Array:
 	var file = FileAccess.open("res://data/buildings.json", FileAccess.READ)
 	if file:
-		var json = JSON.parse_string(file.get_as_text())
-		return json if json else []
+		var data = JSON.parse_string(file.get_as_text())
+		if data is Array:
+			return data
 	return []
 
 ## Recalculates total worker capacity and assignments
@@ -73,3 +78,12 @@ func update_worker_stats() -> void:
 			if b.id == "house":
 				total_workers += b.worker_capacity
 			assigned_workers += b.assigned_workers
+
+func get_resource_color(id: String) -> Color:
+	match id:
+		"food": return Color.GREEN
+		"energy": return Color.YELLOW
+		"materials": return Color.SADDLE_BROWN
+		"knowledge": return Color.SKY_BLUE
+		"labor_vouchers": return Color.GOLD
+		_: return Color.WHITE

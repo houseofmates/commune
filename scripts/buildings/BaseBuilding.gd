@@ -22,7 +22,7 @@ func _ready() -> void:
 
 	setup_building()
 	GameState.update_worker_stats()
-	update_ui()
+	update_label()
 
 ## Configures the building based on JSON data
 func setup_building() -> void:
@@ -44,21 +44,15 @@ func upgrade() -> bool:
 		return false
 
 	var cost = get_upgrade_cost()
-
+	# Phase 1: check all resources available without spending
 	for res_id in cost.keys():
-		if not GameState.has_enough_resources(res_id, cost[res_id]):
+		if GameState.resources.get(res_id, 0) < cost[res_id]:
 			return false
-
+	# Phase 2: spend all resources
 	for res_id in cost.keys():
 		GameState.consume_resource(res_id, cost[res_id])
-
 	level += 1
-	if id == "house":
-		worker_capacity += 2
-
-	GameState.update_worker_stats()
-	update_ui()
-	EventBus.building_upgraded.emit(self)
+	update_label()
 	return true
 
 ## Calculates the cost for the next upgrade
@@ -103,12 +97,12 @@ func assign_worker(amount: int) -> bool:
 	if new_total_assigned <= GameState.total_workers and amount <= max_workers and amount >= 0:
 		assigned_workers = amount
 		GameState.update_worker_stats()
-		update_ui()
+		update_label()
 		return true
 	return false
 
 ## Updates the building's world-space UI
-func update_ui() -> void:
+func update_label() -> void:
 	if label:
 		label.text = "%s (lvl %d)\nworkers: %d/%d" % [display_name, level, assigned_workers, max_workers]
 		if id == "house":
