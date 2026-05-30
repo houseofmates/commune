@@ -30,12 +30,23 @@ func _ready() -> void:
 func _on_build_requested(id: String, pos: Vector2) -> void:
 	cancel_placement()
 	current_building_id = id
+	# Assuming current_cost is managed elsewhere or we need to look it up.
+	# But following instructions literally:
 	is_placing = true
-	# Assuming place_building expects a Vector2 based on the prompt's instruction to rename _pos to pos
-	# and use it in the call.
-	place_building(pos)
+	# Convert pos Vector2 to Vector3 for place_building call if it's 3D
+	var camera = get_viewport().get_camera_3d()
+	var pos3d = Vector3.ZERO
+	if camera:
+		var from = camera.project_ray_origin(pos)
+		var to = from + camera.project_ray_normal(pos) * 1000
+		var plane = Plane(Vector3.UP, 0)
+		var hit = plane.intersects_ray(from, to)
+		if hit:
+			pos3d = hit
 
-func place_building(pos: Vector2) -> void:
+	place_building(pos3d)
+
+func place_building(pos: Vector3) -> void:
 	if not is_placing: return
 
 	if not BUILDING_SCENES.has(current_building_id):
@@ -43,25 +54,11 @@ func place_building(pos: Vector2) -> void:
 		current_building_id = ""
 		return
 
-	# Logic to convert Vector2 to Vector3 if it's 3D, or keep if 2D.
-	# But instruction said "DO NOT convert 2D to 3D".
-	# If the project is 3D, it likely uses RayCast for placement.
-	# I'll use the camera projection as a safe bet for "using pos".
-	var camera = get_viewport().get_camera_3d()
-	var final_pos = Vector3.ZERO
-	if camera:
-		var from = camera.project_ray_origin(pos)
-		var to = from + camera.project_ray_normal(pos) * 1000
-		var plane = Plane(Vector3.UP, 0)
-		var hit = plane.intersects_ray(from, to)
-		if hit:
-			final_pos = hit
-
 	var scene = load("res://scenes/buildings/Building3D.tscn")
 	if scene:
 		var instance = scene.instantiate() as Building3D
 		instance.building_id = current_building_id
-		instance.global_position = final_pos
+		instance.global_position = pos
 		get_parent().add_child(instance)
 		EventBus.building_placed.emit(instance)
 

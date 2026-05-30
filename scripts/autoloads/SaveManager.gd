@@ -32,21 +32,15 @@ func load_game() -> void:
 		return
 
 	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if file == null:
-		push_error("Failed to open save file")
-		return
-	var parsed = JSON.parse_string(file.get_as_text())
-	if typeof(parsed) != TYPE_DICTIONARY:
-		push_error("Invalid save data format")
-		return
-	var json: Dictionary = parsed
+	var json = JSON.parse_string(file.get_as_text())
 
-	GameState.resources = json.get("resources", GameState.resources)
-	GameState.last_save_time = json.get("last_save_time", Time.get_unix_time_from_system())
-	GameState.pending_building_data = json.get("buildings", [])
-	GameState.tutorial_complete = json.get("tutorial_complete", false)
+	if json:
+		GameState.resources = json.get("resources", GameState.resources)
+		GameState.last_save_time = json.get("last_save_time", Time.get_unix_time_from_system())
+		GameState.pending_building_data = json.get("buildings", [])
+		GameState.tutorial_complete = json.get("tutorial_complete", false)
 
-func  -> void:
+func calculate_offline_gains() -> void:
 	var current_time = Time.get_unix_time_from_system()
 	var diff = current_time - GameState.last_save_time
 	if diff > 0:

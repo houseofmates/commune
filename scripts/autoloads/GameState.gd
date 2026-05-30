@@ -44,8 +44,6 @@ func add_resource(id: String, amount: float) -> void:
 ## Consumes amount of resource if available. Returns success.
 func consume_resource(id: String, amount: float) -> bool:
 	if amount <= 0: return false
-	if amount <= 0: return false
-	if amount <= 0: return false
 	if has_enough_resources(id, amount):
 		resources[id] -= amount
 		EventBus.resource_updated.emit(id, resources[id])

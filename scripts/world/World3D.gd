@@ -1,32 +1,35 @@
 extends Node3D
 class_name World3D
 
-const WORLD_SCALE_FACTOR: float = 32.0
-
-@onready var camera_rig: Node3D = $CameraRig
-@onready var player: CharacterBody3D = $Character3D
+@onready var building_placer: BuildingPlacer = $BuildingPlacer
 
 func _ready() -> void:
+	# Load pending buildings from save
+	for b_data in GameState.pending_building_data:
+		_rehydrate_building(b_data)
+
+	GameState.pending_building_data = []
+	GameState.update_worker_stats()
+	SaveManager.calculate_offline_gains()
+
 	EventBus.building_placed.connect(_on_building_placed)
-	# Position player
-	player.global_position = Vector3(0, 0, 0)
+	EventBus.building_upgraded.connect(_on_building_upgraded)
 
-func _process(delta: float) -> void:
-	if is_instance_valid(player):
-		var target_pos = player.global_position
-		camera_rig.global_position = camera_rig.global_position.lerp(target_pos, 0.1)
+func _rehydrate_building(data: Dictionary) -> void:
+	var id = data["id"]
+	if not BuildingPlacer.BUILDING_SCENES.has(id): return
 
-func _on_building_placed(building_node: Node) -> void:
-	var b3d_scene = load("res://scenes/buildings/Building3D.tscn")
-	if b3d_scene:
-		var instance = b3d_scene.instantiate() as Building3D
-		if building_node.get("id"):
-			instance.building_id = building_node.id
+	var scene = load(BuildingPlacer.BUILDING_SCENES[id])
+	var instance = scene.instantiate()
+	instance.building_id = id
+	instance.global_position = Vector3(data["position"]["x"], 0, data["position"]["y"])
+	add_child(instance)
+	GameState.buildings.append(instance)
 
-		# Use standardized scale factor
-		instance.global_position = Vector3(
-			building_node.global_position.x / WORLD_SCALE_FACTOR,
-			0,
-			building_node.global_position.y / WORLD_SCALE_FACTOR
-		)
-		add_child(instance)
+func _on_building_placed(building: Node):
+	var p = SimpleParticles.new()
+	p.global_position = building.global_position
+	add_child(p)
+
+func _on_building_upgraded(_building: Node):
+	pass

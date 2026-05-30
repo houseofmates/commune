@@ -7,7 +7,7 @@ var target_index: int = 0
 var current_target: Vector3 = Vector3.ZERO
 var is_waiting: bool = false
 
-@onready var sprite: Sprite3D = get_node_or_null("Sprite3D")
+@onready var sprite: Sprite3D = $Sprite3D
 
 func _ready() -> void:
 	if targets.is_empty():
