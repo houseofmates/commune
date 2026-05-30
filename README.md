@@ -2,7 +2,6 @@
 
 <p align="center">
   <strong>a socialist/communist-themed idle/incremental game</strong><br>
-  built with godot 4.3 — for the workers, by the workers.
 </p>
 
 <p align="center">
