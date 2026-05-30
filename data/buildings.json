@@ -1,0 +1,168 @@
+[
+  {
+    "id": "house",
+    "display_name": "worker housing",
+    "description": "a place for the community to rest. provides workers.",
+    "cost": { "labor_vouchers": 20 },
+    "produces": {},
+    "consumes": {},
+    "worker_capacity": 2,
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 0
+  },
+  {
+    "id": "farm",
+    "display_name": "community farm",
+    "description": "collective wheat farming.",
+    "cost": { "labor_vouchers": 50 },
+    "produces": { "wheat": 2.0 },
+    "consumes": {},
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 0
+  },
+  {
+    "id": "foresters_hut",
+    "display_name": "forester's hut",
+    "description": "sustainable logging.",
+    "cost": { "labor_vouchers": 30 },
+    "produces": { "logs": 1.0 },
+    "consumes": {},
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 10
+  },
+  {
+    "id": "quarry",
+    "display_name": "stone quarry",
+    "description": "extracting stone.",
+    "cost": { "labor_vouchers": 50, "logs": 10 },
+    "produces": { "stone": 1.0 },
+    "consumes": {},
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 50
+  },
+  {
+    "id": "mine",
+    "display_name": "iron mine",
+    "description": "extracting iron ore.",
+    "cost": { "labor_vouchers": 100, "stone": 20 },
+    "produces": { "iron_ore": 0.8 },
+    "consumes": {},
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 150
+  },
+  {
+    "id": "sheep_farm",
+    "display_name": "sheep farm",
+    "description": "wool production.",
+    "cost": { "labor_vouchers": 80, "logs": 15 },
+    "produces": { "wool": 1.2 },
+    "consumes": { "wheat": 0.5 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 100
+  },
+  {
+    "id": "mill",
+    "display_name": "communal mill",
+    "description": "wheat to flour.",
+    "cost": { "labor_vouchers": 60, "stone": 15 },
+    "produces": { "flour": 1.5 },
+    "consumes": { "wheat": 1.0 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 80
+  },
+  {
+    "id": "sawmill",
+    "display_name": "sawmill",
+    "description": "logs to planks.",
+    "cost": { "labor_vouchers": 70, "logs": 20 },
+    "produces": { "planks": 1.2 },
+    "consumes": { "logs": 1.0 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 120
+  },
+  {
+    "id": "stonemason",
+    "display_name": "stonemason",
+    "description": "stone to blocks.",
+    "cost": { "labor_vouchers": 100, "stone": 30 },
+    "produces": { "stone_blocks": 1.0 },
+    "consumes": { "stone": 1.0 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 200
+  },
+  {
+    "id": "smelter",
+    "display_name": "smelter",
+    "description": "ore to ingots.",
+    "cost": { "labor_vouchers": 150, "stone_blocks": 20 },
+    "produces": { "iron_ingots": 0.8 },
+    "consumes": { "iron_ore": 1.0, "logs": 0.5 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 400
+  },
+  {
+    "id": "bakery",
+    "display_name": "people's bakery",
+    "description": "flour to bread.",
+    "cost": { "labor_vouchers": 120, "stone_blocks": 10 },
+    "produces": { "bread": 2.0 },
+    "consumes": { "flour": 1.0 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 250
+  },
+  {
+    "id": "workshop",
+    "display_name": "furniture workshop",
+    "description": "crafting furniture.",
+    "cost": { "labor_vouchers": 200, "planks": 30, "iron_ingots": 5 },
+    "produces": { "furniture": 0.5 },
+    "consumes": { "planks": 1.0, "iron_ingots": 0.2 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 600
+  },
+  {
+    "id": "blacksmith",
+    "display_name": "blacksmith",
+    "description": "forging tools.",
+    "cost": { "labor_vouchers": 250, "iron_ingots": 20, "stone_blocks": 20 },
+    "produces": { "tools": 0.4 },
+    "consumes": { "iron_ingots": 1.0, "stone_blocks": 0.5 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 1000
+  },
+  {
+    "id": "tailor",
+    "display_name": "communal tailor",
+    "description": "wool to clothing.",
+    "cost": { "labor_vouchers": 180, "planks": 20, "wool": 20 },
+    "produces": { "clothing": 0.6 },
+    "consumes": { "wool": 1.0 },
+    "upgrade_cost_multiplier": 2.0,
+    "max_level": 10,
+    "unlock_at_labor_vouchers": 800
+  },
+  {
+    "id": "monument",
+    "display_name": "monument to labour",
+    "description": "a grand tribute to our collective effort.",
+    "cost": { "labor_vouchers": 1000000 },
+    "produces": {},
+    "consumes": {},
+    "upgrade_cost_multiplier": 1.0,
+    "max_level": 1,
+    "unlock_at_labor_vouchers": 500000
+  }
+]

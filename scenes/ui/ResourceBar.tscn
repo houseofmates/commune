@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ResourceBar.gd" id="1_script"]
+
+[node name="ResourceBar" type="HBoxContainer"]
+offset_right = 390.0
+offset_bottom = 40.0
+alignment = 1
+script = ExtResource("1_script")
+theme_override_constants/separation = 12
+
+[node name="LaborPointsLabel" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.964706, 0.690196, 0.0705882, 1)
+text = "0"
+
+[node name="FoodLabel" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "0"

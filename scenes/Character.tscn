@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/character/CharacterController.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/character/JohnSprite.gd" id="2_sprite"]
+[ext_resource type="Script" path="res://scripts/character/CharacterAnimator.gd" id="3_anim"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(32, 32)
+
+[node name="Character" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="JohnSprite" type="Node2D" parent="."]
+script = ExtResource("2_sprite")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="CharacterAnimator" type="Node" parent="."]
+script = ExtResource("3_anim")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

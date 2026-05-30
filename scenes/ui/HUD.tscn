@@ -1,0 +1,85 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ResourceBar.tscn" id="2_bar"]
+[ext_resource type="PackedScene" path="res://scenes/ui/BuildingMenu.tscn" id="3_menu"]
+[ext_resource type="PackedScene" path="res://scenes/ui/BuildingManagement.tscn" id="4_manage"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="ResourceBar" parent="." instance=ExtResource("2_bar")]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="SaveIcon" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 40.0
+offset_right = -20.0
+offset_bottom = 63.0
+grow_horizontal = 0
+text = "💾"
+[node name="BuildButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -60.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.964706, 0.690196, 0.0705882, 1)
+text = "build"
+
+[node name="SettingsButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -60.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = 100.0
+grow_horizontal = 0
+text = "settings"
+[node name="WorkerCount" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -40.0
+offset_right = 140.0
+offset_bottom = -17.0
+grow_vertical = 0
+text = "workers: 0/0"
+
+[node name="BuildingMenu" parent="." instance=ExtResource("3_menu")]
+visible = false
+layout_mode = 1
+
+[node name="BuildingManagement" parent="." instance=ExtResource("4_manage")]
+visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="BuildButton" to="." method="_on_build_button_pressed"]
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]
